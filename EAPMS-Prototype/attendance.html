@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Attendance</title>
+</head>
+<body>
+
+<h2>Attendance</h2>
+
+<button onclick="clockIn()">Clock In</button>
+<button onclick="clockOut()">Clock Out</button>
+
+<p id="status"></p>
+
+<script>
+function clockIn() {
+    document.getElementById("status").innerText = "Clocked In at " + new Date().toLocaleTimeString();
+}
+
+function clockOut() {
+    document.getElementById("status").innerText = "Clocked Out at " + new Date().toLocaleTimeString();
+}
+</script>
+
+<br><br>
+<button onclick="goBack()">Back</button>
+
+<script>
+function goBack() {
+    window.location.href = "dashboard.html";
+}
+</script>
+
+</body>
+</html>
