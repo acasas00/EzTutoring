@@ -1,35 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
+<link rel="stylesheet" href="style.css">
 <title>Attendance</title>
 </head>
 <body>
 
-<h2>Attendance</h2>
+<div class="nav">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="attendance.html">Attendance</a>
+    <a href="payslip.html">Payslip</a>
+</div>
 
-<button onclick="clockIn()">Clock In</button>
-<button onclick="clockOut()">Clock Out</button>
+<div class="page">
+    <h2>Attendance</h2>
 
-<p id="status"></p>
+    <button onclick="clockIn()">Clock In</button>
+    <button onclick="clockOut()">Clock Out</button>
 
-<script>
-function clockIn() {
-    document.getElementById("status").innerText = "Clocked In at " + new Date().toLocaleTimeString();
-}
+    <p id="status"></p>
+</div>
 
-function clockOut() {
-    document.getElementById("status").innerText = "Clocked Out at " + new Date().toLocaleTimeString();
-}
-</script>
-
-<br><br>
-<button onclick="goBack()">Back</button>
-
-<script>
-function goBack() {
-    window.location.href = "dashboard.html";
-}
-</script>
-
+<script src="script.js"></script>
 </body>
 </html>
