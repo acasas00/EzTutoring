@@ -6,7 +6,7 @@ app.use(express.static('public'));
 
 let user = { username: "admin", password: "123" };
 
-// SESSION STORAGE (simple demo storage)
+// SESSION STORAGE
 let sessions = [];
 let currentSession = null;
 
@@ -32,9 +32,7 @@ app.post('/login', (req, res) => {
     }
 });
 
-// =====================
 // CLOCK IN
-// =====================
 app.post('/clock-in', (req, res) => {
     try {
         if (currentSession) {
@@ -57,9 +55,7 @@ app.post('/clock-in', (req, res) => {
     }
 });
 
-// =====================
 // CLOCK OUT
-// =====================
 app.post('/clock-out', (req, res) => {
     try {
         if (!currentSession) {
@@ -80,9 +76,7 @@ app.post('/clock-out', (req, res) => {
     }
 });
 
-// =====================
 // GET ATTENDANCE
-// =====================
 app.get('/attendance', (req, res) => {
     try {
         console.log("GET ATTENDANCE:", sessions);
@@ -92,9 +86,7 @@ app.get('/attendance', (req, res) => {
     }
 });
 
-// =====================
 // GET CURRENT SESSION
-// =====================
 app.get('/current-session', (req, res) => {
     try {
         console.log("GET CURRENT SESSION:", currentSession);
@@ -104,9 +96,7 @@ app.get('/current-session', (req, res) => {
     }
 });
 
-// =====================
 // GET PAYSLIP
-// =====================
 app.get('/payslip', (req, res) => {
     try {
         let totalHours = 0;
@@ -133,9 +123,7 @@ app.get('/payslip', (req, res) => {
     }
 });
 
-// =====================
 // START SERVER
-// =====================
 app.listen(3000, () => {
     console.log("Server running on http://localhost:3000");
 });
