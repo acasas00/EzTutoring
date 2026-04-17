@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="style.css">
+<title>Login</title>
+
+<style>
+.container {
+    width: 360px;
+    margin: 120px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0px 0px 15px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+h2 {
+    margin-bottom: 20px;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #0056b3;
+}
+
+button:disabled {
+    background: gray;
+    cursor: not-allowed;
+}
+
+.error {
+    color: red;
+    margin-top: 10px;
+}
+
+.success {
+    color: green;
+    margin-top: 10px;
+}
+
+.loading {
+    color: gray;
+    font-size: 13px;
+}
+</style>
+
+<script src="script.js" defer></script>
+
+<script defer>
+document.addEventListener("DOMContentLoaded", () => {
+    // 🔥 If already logged in → skip login page
+    let loggedIn = localStorage.getItem("loggedIn");
+
+    if (loggedIn) {
+        window.location.href = "dashboard.html";
+    }
+});
+</script>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>EAPMS Login</h2>
+
+    <input id="user" placeholder="Username">
+    <input id="pass" type="password" placeholder="Password">
+
+    <button onclick="login()" id="btn">Login</button>
+
+    <p id="message" class="error"></p>
+    <p id="loading" class="loading"></p>
+
+</div>
+
+<script>
+async function login() {
+    let username = document.getElementById("user").value.trim();
+    let password = document.getElementById("pass").value.trim();
+
+    let msg = document.getElementById("message");
+    let loading = document.getElementById("loading");
+    let btn = document.getElementById("btn");
+
+    msg.innerText = "";
+    loading.innerText = "";
+
+    // ✅ Validation
+    if (!username || !password) {
+        msg.innerText = "Please enter both username and password.";
+        return;
+    }
+
+    loading.innerText = "Authenticating...";
+    btn.disabled = true;
+
+    try {
+        let res = await fetch('/login', {
+            method: "POST",
+            headers: {"Content-Type":"application/json"},
+            body: JSON.stringify({ username, password })
+        });
+
+        let data = await res.json();
+
+        if (data.success) {
+            localStorage.setItem("loggedIn", "true");
+
+            loading.className = "success";
+            loading.innerText = "Login successful! Redirecting...";
+
+            setTimeout(() => {
+                window.location.href = "dashboard.html";
+            }, 800);
+
+        } else {
+            msg.innerText = "Invalid username or password.";
+            loading.innerText = "";
+            btn.disabled = false;
+        }
+
+    } catch {
+        msg.innerText = "Server error. Please try again.";
+        loading.innerText = "";
+        btn.disabled = false;
+    }
+}
+</script>
+
+</body>
+</html>

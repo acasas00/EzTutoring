@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="style.css">
+<title>Payslip</title>
+
+<script src="script.js" defer></script>
+<script defer>
+document.addEventListener("DOMContentLoaded", () => {
+    checkAuth();
+    loadPayslip();
+});
+</script>
+
+<style>
+.page {
+    max-width: 900px;
+    margin: auto;
+}
+
+.payslip-card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0px 0px 15px rgba(0,0,0,0.1);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.section {
+    margin-top: 15px;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.total {
+    font-weight: bold;
+    font-size: 18px;
+    margin-top: 15px;
+}
+
+.download {
+    margin-top: 20px;
+    text-align: right;
+}
+
+.nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logout-btn {
+    background: red;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    cursor: pointer;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="nav">
+<div>
+<a href="dashboard.html">Dashboard</a>
+<a href="attendance.html">Attendance</a>
+<a href="payslip.html">Payslip</a>
+</div>
+
+<button class="logout-btn" onclick="logout()">Logout</button>
+</div>
+
+<div class="page">
+
+<h2>Payslip</h2>
+
+<div class="payslip-card">
+
+<div class="header">
+<div>
+    <strong>Employee:</strong> Anthony<br>
+    <strong>ID:</strong> 1001
+</div>
+
+<div>
+    <strong>Pay Period:</strong><br>
+    April 2026
+</div>
+</div>
+
+<div class="section">
+<h3>Earnings</h3>
+
+<div class="row">
+    <span>Total Hours</span>
+    <span id="hours">Loading...</span>
+</div>
+
+<div class="row">
+    <span>Hourly Rate</span>
+    <span id="rate">Loading...</span>
+</div>
+
+</div>
+
+<div class="section">
+<h3>Deductions</h3>
+
+<div class="row">
+    <span>Tax (Simulated)</span>
+    <span id="tax">Loading...</span>
+</div>
+
+</div>
+
+<div class="total" id="net">
+Net Pay: Loading...
+</div>
+
+<div class="download">
+<button onclick="download()">Download Payslip</button>
+</div>
+
+</div>
+
+</div>
+
+<script>
+async function loadPayslip() {
+    try {
+        let res = await fetch('/payslip');
+        let d = await res.json();
+
+        let tax = d.pay * 0.2;
+
+        document.getElementById("hours").innerText = d.hours + " hrs";
+        document.getElementById("rate").innerText = "$" + d.rate;
+        document.getElementById("tax").innerText = "-$" + tax.toFixed(2);
+        document.getElementById("net").innerText = "Net Pay: $" + (d.pay - tax).toFixed(2);
+
+    } catch {
+        document.getElementById("net").innerText = "Error loading payslip";
+    }
+}
+
+function download() {
+    alert("Payslip downloaded (simulated)");
+}
+</script>
+
+</body>
+</html>

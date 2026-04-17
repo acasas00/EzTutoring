@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="style.css">
+<title>Attendance</title>
+
+<script src="script.js" defer></script>
+<script defer>
+document.addEventListener("DOMContentLoaded", () => {
+    checkAuth();
+    restoreSession();
+    loadHistory();
+});
+</script>
+
+<style>
+.page {
+    max-width: 900px;
+    margin: auto;
+}
+
+.card {
+    background: white;
+    padding: 20px;
+    margin: 15px 0;
+    border-radius: 12px;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+}
+
+.status {
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.status.active {
+    color: green;
+}
+
+.status.inactive {
+    color: red;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th, td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="nav">
+<a href="dashboard.html">Dashboard</a>
+<a href="attendance.html">Attendance</a>
+<a href="payslip.html">Payslip</a>
+</div>
+
+<div class="page">
+
+<h2>Attendance Management</h2>
+
+<div class="card">
+    <h3>Clock Controls</h3>
+
+    <div class="actions">
+        <button onclick="clockIn()">Clock In</button>
+        <button onclick="clockOut()">Clock Out</button>
+    </div>
+
+    <p id="status" class="status inactive">
+        Status: Not clocked in
+    </p>
+
+    <p id="timer"></p>
+</div>
+
+<div class="card">
+    <h3>Attendance History</h3>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Clock In</th>
+                <th>Clock Out</th>
+                <th>Hours</th>
+            </tr>
+        </thead>
+        <tbody id="history"></tbody>
+    </table>
+</div>
+
+</div>
+
+<script>
+let currentSession = {
+    clockIn: null,
+    clockOut: null,
+    active: false
+};
+
+let timerInterval = null;
+
+// RESTORE SESSION
+async function restoreSession() {
+    try {
+        let res = await fetch('http://localhost:3000/current-session');
+        let session = await res.json();
+
+        console.log("RESTORE SESSION:", session);
+
+        if (session && session.clockIn && !session.clockOut) {
+            currentSession.clockIn = new Date(session.clockIn);
+            currentSession.clockOut = null;
+            currentSession.active = true;
+
+            updateStatus("Clocked In at " + formatTime(currentSession.clockIn), true);
+            startTimer();
+        } else {
+            currentSession.clockIn = null;
+            currentSession.clockOut = null;
+            currentSession.active = false;
+
+            updateStatus("Status: Not clocked in", false);
+            stopTimer();
+        }
+
+    } catch (err) {
+        console.log("RESTORE ERROR:", err);
+    }
+}
+
+// CLOCK IN
+async function clockIn() {
+    console.log("CLICK IN BUTTON HIT");
+
+    if (currentSession.active) {
+        alert("You are already clocked in!");
+        return;
+    }
+
+    try {
+        let res = await fetch('http://localhost:3000/clock-in', {
+            method: 'POST'
+        });
+
+        console.log("FETCH SENT");
+
+        let data = await res.json();
+        console.log("RESPONSE:", data);
+
+        if (data.error) return alert(data.error);
+
+        currentSession.clockIn = new Date(data.time);
+        currentSession.clockOut = null;
+        currentSession.active = true;
+
+        updateStatus("Clocked In at " + formatTime(currentSession.clockIn), true);
+
+        startTimer();
+
+        loadHistory();
+
+    } catch (err) {
+        console.log("ERROR:", err);
+        alert("Clock-in failed");
+    }
+}
+
+// CLOCK OUT
+async function clockOut() {
+    console.log("CLICK OUT BUTTON HIT");
+
+    if (!currentSession.active) {
+        alert("You must clock in first!");
+        return;
+    }
+
+    try {
+        let res = await fetch('http://localhost:3000/clock-out', {
+            method: 'POST'
+        });
+
+        let data = await res.json();
+        console.log("RESPONSE:", data);
+
+        if (data.error) return alert(data.error);
+
+        currentSession.clockOut = new Date(data.time);
+        currentSession.active = false;
+
+        stopTimer();
+
+        let hours = calculateHours(currentSession.clockIn, currentSession.clockOut);
+
+        updateStatus(
+            "Clocked Out at " + formatTime(currentSession.clockOut) +
+            " | Hours Worked: " + hours + " hrs",
+            false
+        );
+
+        loadHistory();
+
+    } catch (err) {
+        console.log("ERROR:", err);
+        alert("Clock-out failed");
+    }
+}
+
+// LOAD HISTORY
+async function loadHistory() {
+    try {
+        let res = await fetch('http://localhost:3000/attendance');
+        let history = await res.json();
+
+        console.log("HISTORY:", history);
+
+        let table = document.getElementById("history");
+        table.innerHTML = "";
+
+        history.forEach(entry => {
+            let start = new Date(entry.clockIn);
+            let end = entry.clockOut ? new Date(entry.clockOut) : null;
+
+            let hours = end ? calculateHours(start, end) : "--";
+
+            let row = `
+                <tr>
+                    <td>${start.toLocaleDateString()}</td>
+                    <td>${formatTime(start)}</td>
+                    <td>${end ? formatTime(end) : "Active"}</td>
+                    <td>${hours}</td>
+                </tr>
+            `;
+            table.innerHTML += row;
+        });
+
+    } catch (err) {
+        console.log("LOAD ERROR:", err);
+    }
+}
+
+// TIMER
+function startTimer() {
+    if (timerInterval) clearInterval(timerInterval);
+
+    timerInterval = setInterval(() => {
+        let now = new Date();
+        let diff = (now - currentSession.clockIn) / 1000;
+
+        let hrs = Math.floor(diff / 3600);
+        let mins = Math.floor((diff % 3600) / 60);
+        let secs = Math.floor(diff % 60);
+
+        document.getElementById("timer").innerText =
+            `Session Time: ${hrs}h ${mins}m ${secs}s`;
+    }, 1000);
+}
+
+function stopTimer() {
+    clearInterval(timerInterval);
+    timerInterval = null;
+    document.getElementById("timer").innerText = "";
+}
+
+// HELPERS
+function calculateHours(start, end) {
+    return ((end - start) / (1000 * 60 * 60)).toFixed(2);
+}
+
+function formatTime(date) {
+    return date.toLocaleTimeString();
+}
+
+function updateStatus(msg, active) {
+    let statusEl = document.getElementById("status");
+    statusEl.innerText = msg;
+
+    statusEl.classList.toggle("active", active);
+    statusEl.classList.toggle("inactive", !active);
+}
+</script>
+
+</body>
+</html>
