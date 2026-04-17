@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>EAPMS Prototype</title>
+<style>
+body {
+    font-family: Arial;
+    margin: 0;
+    background: #f4f6f9;
+}
+
+.container {
+    width: 300px;
+    margin: 100px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+button {
+    padding: 10px;
+    margin: 5px;
+    border: none;
+    border-radius: 5px;
+    background: #007bff;
+    color: white;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #0056b3;
+}
+
+.nav {
+    background: #007bff;
+    color: white;
+    padding: 15px;
+    display: none;
+}
+
+.section {
+    display: none;
+    padding: 20px;
+}
+
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 10px;
+    box-shadow: 0px 0px 8px rgba(0,0,0,0.1);
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div id="login" class="container">
+    <h2>Login</h2>
+    <input id="user" placeholder="Username">
+    <input id="pass" type="password" placeholder="Password">
+    <button onclick="login()">Login</button>
+    <p id="error" style="color:red;"></p>
+</div>
+
+<!-- NAV -->
+<div class="nav" id="nav">
+    <span onclick="show('dashboard')">Dashboard</span> |
+    <span onclick="show('attendance')">Attendance</span> |
+    <span onclick="show('payslip')">Payslip</span> |
+    <span onclick="logout()">Logout</span>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard" class="section">
+    <h2>Dashboard</h2>
+    <div class="card">Welcome, Employee</div>
+    <div class="card">Attendance Summary: 40 hours</div>
+    <div class="card">Last Payslip: $800</div>
+</div>
+
+<!-- ATTENDANCE -->
+<div id="attendance" class="section">
+    <h2>Attendance</h2>
+    <button onclick="clockIn()">Clock In</button>
+    <button onclick="clockOut()">Clock Out</button>
+    <p id="status"></p>
+</div>
+
+<!-- PAYSLIP -->
+<div id="payslip" class="section">
+    <h2>Payslip</h2>
+    <div class="card">
+        Name: Anthony <br>
+        Hours: 40 <br>
+        Net Pay: $800
+    </div>
+</div>
+
+<script>
+function login() {
+    let user = document.getElementById("user").value;
+    let pass = document.getElementById("pass").value;
+
+    if(user === "admin" && pass === "123") {
+        document.getElementById("login").style.display = "none";
+        document.getElementById("nav").style.display = "block";
+        show('dashboard');
+    } else {
+        document.getElementById("error").innerText = "Invalid login!";
+    }
+}
+
+function show(section) {
+    document.querySelectorAll(".section").forEach(s => s.style.display = "none");
+    document.getElementById(section).style.display = "block";
+}
+
+function clockIn() {
+    document.getElementById("status").innerText = "Clocked In at " + new Date().toLocaleTimeString();
+}
+
+function clockOut() {
+    document.getElementById("status").innerText = "Clocked Out at " + new Date().toLocaleTimeString();
+}
+
+function logout() {
+    location.reload();
+}
+</script>
+
+</body>
+</html>
