@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="nav">
+<a href="dashboard.html">Dashboard</a>
+<a href="attendance.html">Attendance</a>
+<a href="payslip.html">Payslip</a>
+</div>
+
+<div class="page">
+<h2>Payslip</h2>
+<p id="data"></p>
+</div>
+
+<script>
+async function load() {
+    let res = await fetch('/payslip');
+    let d = await res.json();
+    data.innerText = `Name: ${d.name}, Hours: ${d.hours}, Pay: $${d.pay}`;
+}
+load();
+</script>
+
+</body>
+</html>
