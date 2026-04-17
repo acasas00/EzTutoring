@@ -1,23 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
+<link rel="stylesheet" href="style.css">
 <title>Payslip</title>
 </head>
 <body>
 
-<h2>Payslip</h2>
+<div class="nav">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="attendance.html">Attendance</a>
+    <a href="payslip.html">Payslip</a>
+</div>
 
-<p>Name: Anthony</p>
-<p>Total Hours: 40</p>
-<p>Net Pay: $800</p>
+<div class="page">
+    <h2>Payslip</h2>
 
-<button onclick="goBack()">Back</button>
-
-<script>
-function goBack() {
-    window.location.href = "dashboard.html";
-}
-</script>
+    <div class="card">
+        Name: Anthony <br>
+        Hours: 40 <br>
+        Net Pay: $800
+    </div>
+</div>
 
 </body>
 </html>
