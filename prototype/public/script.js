@@ -1,6 +1,4 @@
-// =====================
-// LOGIN FUNCTION (BACKEND CONNECTED)
-// =====================
+// LOGIN FUNCTION
 async function login() {
     let username = document.getElementById("user")?.value.trim();
     let password = document.getElementById("pass")?.value.trim();
@@ -54,9 +52,7 @@ async function login() {
     }
 }
 
-// =====================
 // AUTH CHECK
-// =====================
 function checkAuth() {
     let loggedIn = localStorage.getItem("loggedIn");
 
@@ -65,9 +61,7 @@ function checkAuth() {
     }
 }
 
-// =====================
 // LOGOUT
-// =====================
 function logout() {
     localStorage.removeItem("loggedIn");
     window.location.href = "index.html";
