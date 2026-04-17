@@ -1,25 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
+<link rel="stylesheet" href="style.css">
 <title>Dashboard</title>
 </head>
 <body>
 
-<h2>Dashboard</h2>
-<p>Welcome Employee</p>
+<div class="nav">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="attendance.html">Attendance</a>
+    <a href="payslip.html">Payslip</a>
+</div>
 
-<button onclick="goAttendance()">Attendance</button>
-<button onclick="goPayslip()">Payslip</button>
+<div class="page">
+    <h2>Dashboard</h2>
 
-<script>
-function goAttendance() {
-    window.location.href = "attendance.html";
-}
-
-function goPayslip() {
-    window.location.href = "payslip.html";
-}
-</script>
+    <div class="card">Welcome Employee</div>
+    <div class="card">Total Hours: 40</div>
+    <div class="card">Last Pay: $800</div>
+</div>
 
 </body>
 </html>
