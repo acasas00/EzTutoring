@@ -2,23 +2,37 @@
 <html>
 <head>
 <link rel="stylesheet" href="style.css">
-<title>Dashboard</title>
 </head>
 <body>
 
-<div class="nav">
-    <a href="dashboard.html">Dashboard</a>
-    <a href="attendance.html">Attendance</a>
-    <a href="payslip.html">Payslip</a>
+<div class="container">
+<h2>Login</h2>
+<input id="user" placeholder="Username"><br>
+<input id="pass" type="password" placeholder="Password"><br>
+<button onclick="login()">Login</button>
+<p id="error"></p>
 </div>
 
-<div class="page">
-    <h2>Dashboard</h2>
+<script>
+async function login() {
+    let res = await fetch('/login', {
+        method: "POST",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({
+            username: user.value,
+            password: pass.value
+        })
+    });
 
-    <div class="card">Welcome Employee</div>
-    <div class="card">Total Hours: 40</div>
-    <div class="card">Last Pay: $800</div>
-</div>
+    let data = await res.json();
+
+    if (data.success) {
+        window.location = "dashboard.html";
+    } else {
+        error.innerText = "Invalid login";
+    }
+}
+</script>
 
 </body>
 </html>
