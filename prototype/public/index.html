@@ -69,7 +69,6 @@ button:disabled {
 
 <script defer>
 document.addEventListener("DOMContentLoaded", () => {
-    // 🔥 If already logged in → skip login page
     let loggedIn = localStorage.getItem("loggedIn");
 
     if (loggedIn) {
@@ -108,7 +107,7 @@ async function login() {
     msg.innerText = "";
     loading.innerText = "";
 
-    // ✅ Validation
+    // Validation
     if (!username || !password) {
         msg.innerText = "Please enter both username and password.";
         return;
