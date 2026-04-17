@@ -1,14 +1,9 @@
 
 # Employee Attendance & Payroll Management System (EAPMS)
 
-## 📌 Overview
-The Employee Attendance & Payroll Management System (EAPMS) is a web-based prototype designed to automate employee attendance tracking and payroll calculation.  
 
-The system improves accuracy, efficiency, and transparency by replacing manual attendance processes with a digital solution.
 
----
-
-## 🎯 Features
+##  Features
 - User Authentication (Login system)
 - Clock In / Clock Out functionality
 - Attendance tracking and history display
@@ -18,14 +13,14 @@ The system improves accuracy, efficiency, and transparency by replacing manual a
 
 ---
 
-## 🧑‍💻 Technology Stack
+##  Technology Stack
 - **Frontend:** HTML, CSS, JavaScript  
 - **Backend:** Node.js, Express  
 - **Database (Conceptual):** MongoDB  
 
 ---
 
-## 🧩 System Components
+##  System Components
 
 ### Functional Components
 - Authentication Component  
@@ -46,8 +41,4 @@ The system improves accuracy, efficiency, and transparency by replacing manual a
 - Attendance Screen  
 - Payslip Screen  
 
----
 
-## 🔄 User Journey (Implemented Flow)
-
-This prototype demonstrates a complete end-to-end user workflow:
