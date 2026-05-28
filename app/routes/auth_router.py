@@ -1,7 +1,8 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
+from fastapi.security import OAuth2PasswordRequestForm
+
 from app.services.user_service import login_user
 from app.utils.jwt_util import create_access_token
-from app.schemas.user_schema import LoginRequest
 
 router = APIRouter(
     prefix="/auth",
@@ -9,12 +10,12 @@ router = APIRouter(
 )
 
 @router.post("/login")
-def login(login_data: LoginRequest):
+def login(form_data: OAuth2PasswordRequestForm = Depends()):
 
     try:
         user = login_user(
-            login_data.email,
-            login_data.password,
+            form_data.username,
+            form_data.password,
         )
 
         token = create_access_token({
