@@ -135,18 +135,15 @@ def get_all_users():
     cursor = conn.cursor(cursor_factory=RealDictCursor)
     query = """
             SELECT
+            users.user_id,
             users.first_name,
             users.last_name,
             users.phone_number,
             users.email,
             users.role
             FROM users
-            WHERE role = %s
             """
-
-    values = ('client',)
-    cursor.execute(query, values)
-
+    cursor.execute(query)
     users = cursor.fetchall()
 
     cursor.close()
