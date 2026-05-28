@@ -37,7 +37,7 @@ def admin_create_tutor(tutor: TutorCreate, current_user = Depends(require_admin)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@router.delete("/tutors/{tutor_id}")
+@router.delete("/tutors/{tutor_id}", response_model=dict)
 def admin_delete_tutor(tutor_id: int, current_user = Depends(require_admin)):
 
     try:

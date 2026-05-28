@@ -45,10 +45,8 @@ def update_tutor_profile(tutor: Tutor):
     return tutor
 
 def delete_tutor_profile(tutor_id: int):
-    deleted = delete_tutor(tutor_id)
-
-    if not deleted:
-        raise ValueError("Tutor not deleted")
+    delete_tutor(tutor_id)
+    return {"success": True}
 
 def display_tutor_profiles():
     tutors = display_tutors()

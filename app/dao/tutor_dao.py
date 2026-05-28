@@ -1,4 +1,5 @@
 from psycopg2.extras import RealDictCursor
+from psycopg2.errors import UniqueViolation
 from app.db.db_connection import get_connection
 from app.models.tutor_profile import Tutor
 
@@ -15,13 +16,40 @@ def create_tutor(tutor:Tutor):
     values = (tutor.user_id,
               tutor.tutor_bio,
               tutor.experience)
+    try:
+        cursor.execute(query, values)
+        created = cursor.fetchone()
 
-    cursor.execute(query, values)
-    created = cursor.fetchone()
-    conn.commit()
+        cursor.execute("""
+                       UPDATE users
+                       SET role = 'tutor'
+                       WHERE user_id = %s
+                       """, (tutor.user_id,))
+
+        cursor.execute("""
+                       SELECT tutors.tutor_id,
+                              users.first_name,
+                              users.last_name,
+                              users.email,
+                              tutors.tutor_bio,
+                              tutors.experience
+                       FROM tutors
+                                JOIN users ON tutors.user_id = users.user_id
+                       WHERE tutors.tutor_id = %s
+                       """, (created["tutor_id"],))
+
+        created = cursor.fetchone()
+        conn.commit()
+
+    except UniqueViolation:
+        conn.rollback()
+        cursor.close()
+        conn.close()
+        return None
 
     cursor.close()
     conn.close()
+
     return created
 
 def update_tutor(tutor:Tutor):
@@ -49,18 +77,27 @@ def update_tutor(tutor:Tutor):
 
 def delete_tutor(tutor_id:int):
     conn = get_connection()
-    cursor = conn.cursor()
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
 
     query = """
         DELETE FROM tutors 
-        WHERE user_id = %s
+        WHERE tutor_id = %s
+        RETURNING *
         """
 
     values = (tutor_id,)
     cursor.execute(query, values)
 
+    deleted = cursor.fetchone()
+
+    if deleted:
+        cursor.execute("""
+        UPDATE users
+        SET role = 'client'
+        WHERE user_id = %s
+            """, (deleted['user_id'],))
+
     conn.commit()
-    deleted = cursor.rowcount > 0
 
     cursor.close()
     conn.close()
