@@ -95,6 +95,7 @@ def search_booking(search_term: str):
                 SELECT
                 bookings.booking_id,
                 bookings.client_id,
+                bookings.tutor_id,
                 bookings.start_time,
                 bookings.end_time,
                 bookings.subject_id,
