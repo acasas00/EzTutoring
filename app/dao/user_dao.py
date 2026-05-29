@@ -86,6 +86,7 @@ def search_user(search_term: str):
 
     query = """
         SELECT
+        users.user_id,
         users.first_name,
         users.last_name,
         users.phone_number,
@@ -98,7 +99,7 @@ def search_user(search_term: str):
         OR last_name ILIKE %s
         """
 
-    values = (like_term, like_term)
+    values = (like_term, like_term,like_term,like_term)
     cursor.execute(query, values)
 
     user = cursor.fetchall()

@@ -37,12 +37,11 @@ def update_tutor_profile(tutor: Tutor):
     validate_tutor_bio(tutor.tutor_bio)
     validate_tutor_experience(tutor.experience)
 
-    tutor = update_tutor(tutor)
-
-    if not tutor:
+    updated = update_tutor(tutor)
+    if not updated:
         raise ValueError("Tutor not updated")
 
-    return tutor
+    return updated
 
 def delete_tutor_profile(tutor_id: int):
     delete_tutor(tutor_id)

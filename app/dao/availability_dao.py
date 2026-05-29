@@ -83,15 +83,13 @@ def search_availability(search_term: str):
     like_term = f"%{search_term}%"
 
     query = ("""
-            SELECT
+            SELECT DISTINCT 
             availability.availability_id,
             availability.tutor_id,
             availability.day_of_week,
             availability.start_time,
             availability.end_time,
             availability.is_recurring,
-            subjects.subject_id,
-            subjects.subject_name,
             users.first_name,
             users.last_name
             FROM availability

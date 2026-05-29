@@ -93,6 +93,8 @@ def update_user_profile(user: User, user_id: int):
     if not updated:
         raise ValueError("User does not exist")
 
+    return updated
+
 def delete_user_profile(user_id: int):
 
     deleted = delete_user(user_id)

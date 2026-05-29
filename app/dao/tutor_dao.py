@@ -59,13 +59,27 @@ def update_tutor(tutor:Tutor):
     query = """
             UPDATE tutors
             SET tutor_bio = %s, experience = %s
-            WHERE user_id = %s
+            WHERE tutor_id = %s
             RETURNING *
             """
 
-    values = (tutor.tutor_bio, tutor.experience, tutor.user_id)
+    values = (tutor.tutor_bio, tutor.experience, tutor.tutor_id)
     cursor.execute(query, values)
 
+    updated = cursor.fetchone()
+
+    cursor.execute("""
+                   SELECT
+                   tutors.tutor_id,
+                   users.first_name,
+                   users.last_name,
+                   users.email,
+                   tutors.tutor_bio,
+                   tutors.experience
+                   FROM tutors
+                   JOIN users ON tutors.user_id = users.user_id
+                   WHERE tutors.tutor_id = %s
+                    """, (updated["tutor_id"],))
     updated = cursor.fetchone()
     conn.commit()
 

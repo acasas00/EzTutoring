@@ -23,3 +23,5 @@ class AvailabilityResponse(BaseModel):
     start_time: time
     end_time: time
     is_recurring: bool
+    first_name: str
+    last_name: str
