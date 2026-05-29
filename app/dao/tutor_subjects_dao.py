@@ -1,4 +1,5 @@
 from psycopg2.extras import RealDictCursor
+from psycopg2.errors import UniqueViolation
 from app.db.db_connection import get_connection
 from app.models.tutor_subjects import TutorSubject
 
@@ -14,9 +15,34 @@ def create_tutor_subjects(tutor_subject: TutorSubject):
 
     values = (tutor_subject.tutor_id, tutor_subject.subject_id)
 
-    cursor.execute(query, values)
-    created = cursor.fetchone()
-    conn.commit()
+    try:
+        cursor.execute(query, values)
+        created = cursor.fetchone()
+
+        cursor.execute("""
+                       SELECT tutors.tutor_id,
+                              subjects.subject_id,
+                              users.first_name,
+                              users.last_name,
+                              subjects.subject_name
+                       FROM tutor_subjects
+                                JOIN tutors ON tutor_subjects.tutor_id = tutors.tutor_id
+                                JOIN subjects ON tutor_subjects.subject_id = subjects.subject_id
+                                JOIN users ON tutors.user_id = users.user_id
+                       WHERE tutor_subjects.tutor_id = %s
+                         AND tutor_subjects.subject_id = %s
+                       """, (created["tutor_id"], created["subject_id"]))
+
+        created = cursor.fetchone()
+        conn.commit()
+
+    except UniqueViolation:
+        conn.rollback()
+
+        cursor.close()
+        conn.close()
+
+        return None
 
     cursor.close()
     conn.close()
