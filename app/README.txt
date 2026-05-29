@@ -1,0 +1,1 @@
+-Add feature to reflect availability change when booking is created/removed
