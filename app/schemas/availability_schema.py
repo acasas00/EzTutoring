@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from datetime import time
+from datetime import datetime
 
 class AvailabilityCreate(BaseModel):
     tutor_id: int
@@ -25,3 +26,7 @@ class AvailabilityResponse(BaseModel):
     is_recurring: bool
     first_name: str
     last_name: str
+
+class AvailabilityResponseSlots(BaseModel):
+    start_time: datetime
+    end_time: datetime

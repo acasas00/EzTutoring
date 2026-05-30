@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
-from app.schemas.availability_schema import AvailabilityCreate, AvailabilityUpdate, AvailabilityResponse
-from app.services.availability_service import create_new_schedule, update_tutor_schedule, delete_tutor_schedule, search_tutor_schedule
+from app.schemas.availability_schema import AvailabilityCreate, AvailabilityUpdate, AvailabilityResponse, AvailabilityResponseSlots
+from app.services.availability_service import create_new_schedule, update_tutor_schedule, delete_tutor_schedule, search_tutor_schedule, get_availability_slots, find_tutor_availability
 from typing import List
 from app.models.availability import Availability
 
@@ -53,5 +53,12 @@ def delete_schedule(availability_id: int):
 def search_tutor_availability(search_term: str):
     try:
         return search_tutor_schedule(search_term)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@router.get("/slots", response_model=List[AvailabilityResponseSlots])
+def find_availability_slots(tutor_id: int, selected_date:str, duration_hours: int):
+    try:
+        return get_availability_slots(tutor_id, selected_date, duration_hours)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))

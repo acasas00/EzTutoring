@@ -7,8 +7,8 @@ def create_booking(booking:Booking):
     cursor = conn.cursor(cursor_factory=RealDictCursor)
 
     query = ("""
-                INSERT INTO bookings (tutor_id, client_id, start_time, end_time, subject_id, status, meeting_link, notes)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+                INSERT INTO bookings (tutor_id, client_id, start_time, end_time, subject_id, session_type, status, meeting_link, notes)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
                 RETURNING *
              """)
 
@@ -19,6 +19,7 @@ def create_booking(booking:Booking):
         booking.start_time,
         booking.end_time,
         booking.subject_id,
+        booking.session_type,
         booking.status,
         booking.meeting_link,
         booking.notes
@@ -38,7 +39,7 @@ def update_booking(booking:Booking):
 
     query = ("""
              UPDATE bookings 
-             SET tutor_id = %s, client_id = %s, start_time = %s, end_time = %s, subject_id = %s, status = %s, meeting_link = %s, notes = %s 
+             SET tutor_id = %s, client_id = %s, start_time = %s, end_time = %s, subject_id = %s, session_type = %s, status = %s, meeting_link = %s, notes = %s 
              WHERE booking_id = %s
              RETURNING *
              """)
@@ -49,6 +50,7 @@ def update_booking(booking:Booking):
         booking.start_time,
         booking.end_time,
         booking.subject_id,
+        booking.session_type,
         booking.status,
         booking.meeting_link,
         booking.notes,
@@ -99,6 +101,7 @@ def search_booking(search_term: str):
                 bookings.start_time,
                 bookings.end_time,
                 bookings.subject_id,
+                bookings.session_type,
                 bookings.status,
                 bookings.meeting_link,
                 bookings.notes,
@@ -128,18 +131,17 @@ def get_booking_by_tutor(tutor_id: int):
     query = ("""
              SELECT
              bookings.start_time,
-             bookings.end_time,
+             bookings.end_time
              FROM bookings
              WHERE tutor_id = %s
              AND status IN ('Pending', 'Confirmed')
              """)
     cursor.execute(query, (tutor_id,))
-    booking = cursor.fetchone()
+    bookings = cursor.fetchall()
 
-    conn.commit()
     cursor.close()
     conn.close()
-    return booking
+    return bookings
 
 def update_booking_status(booking_id:int, status:str):
     conn = get_connection()
@@ -160,3 +162,5 @@ def update_booking_status(booking_id:int, status:str):
     cursor.close()
     conn.close()
     return updated
+
+#admin change of booking type in future

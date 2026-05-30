@@ -1,1 +1,4 @@
 -Add feature to reflect availability change when booking is created/removed <--actively doing this
+- add a new in person or online to booking
+-change dao,services, routes, models, schemas to reflect changes above.
+-admin change of booking type to online/InPerson --> depending on user call request rather than actual change

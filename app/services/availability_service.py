@@ -1,6 +1,8 @@
 from datetime import time
 from app.models.availability import Availability
-from app.dao.availability_dao import create_availability, update_availability, delete_availability, search_availability
+from app.dao.availability_dao import create_availability, update_availability, delete_availability, search_availability, get_availability_by_tutor
+from app.dao.booking_dao import get_booking_by_tutor
+from app.utils.availability_booking_util import generate_slots
 
 DAYS_OF_WEEK = ('monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday')
 
@@ -52,6 +54,20 @@ def delete_tutor_schedule(availability_id: int):
 def search_tutor_schedule(search_term: str):
 
     search = search_availability(search_term)
+    if search is None:
+        raise ValueError("Tutor schedule not searched")
+
+    return search
+
+def get_availability_slots(tutor_id: int, selected_date:str,  duration_hours: int):
+    availability = get_availability_by_tutor(tutor_id)
+    bookings = get_booking_by_tutor(tutor_id)
+
+    return generate_slots(availability, bookings, selected_date, duration_hours)
+
+def find_tutor_availability(tutor_id: int):
+    search = get_availability_by_tutor(tutor_id)
+
     if search is None:
         raise ValueError("Tutor schedule not searched")
 

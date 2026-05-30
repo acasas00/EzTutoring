@@ -89,6 +89,7 @@ def create_bookings_table():
                     end_time TIMESTAMP NOT NULL,
                     subject_id INTEGER NOT NULL,
                     FOREIGN KEY(subject_id) REFERENCES subjects(subject_id),
+                    session_type VARCHAR(20) NOT NULL DEFAULT 'InPerson',
                     status varchar(20) NOT NULL DEFAULT 'Pending',
                     meeting_link TEXT,
                     notes TEXT NOT NULL DEFAULT '',

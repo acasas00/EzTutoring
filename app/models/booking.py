@@ -9,6 +9,7 @@ class Booking(BaseModel):
     start_time: datetime
     end_time: datetime
     subject_id: int
+    session_type: str
     status: str = "Pending"
     meeting_link: Optional[str] = None
     notes: str = ""

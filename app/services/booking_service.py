@@ -1,6 +1,6 @@
 from datetime import datetime
 from app.models.booking import Booking
-from app.dao.booking_dao import create_booking, update_booking, delete_booking, search_booking
+from app.dao.booking_dao import create_booking, update_booking, delete_booking, search_booking, get_booking_by_tutor, update_booking_status
 
 NOTES_MAX_LENGTH = 250
 MEETING_LINK_MAX_LENGTH = 400
@@ -81,5 +81,27 @@ def prepare_tutoring_data(booking: Booking):
 
     booking.status = normalize_status(booking.status)
     validate_status(booking.status)
+
+def find_bookings_by_tutor(booking_id: int):
+    bookings = get_booking_by_tutor(booking_id)
+
+    if bookings is None:
+        raise ValueError("Booking search failed")
+
+    return bookings
+
+def change_booking_status(booking_id: int, status: str):
+    status = normalize_status(status)
+    validate_status(status)
+
+    updated_status = update_booking_status(booking_id, status)
+
+    if not updated_status:
+        raise ValueError("Booking status change failed")
+
+    return updated_status
+
+
+
 
 
