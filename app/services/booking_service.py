@@ -4,7 +4,7 @@ from app.dao.booking_dao import create_booking, update_booking, delete_booking, 
 
 NOTES_MAX_LENGTH = 250
 MEETING_LINK_MAX_LENGTH = 400
-STATUS = ("pending", "approved", "rejected")
+STATUS = ("pending", "confirmed", "rejected")
 
 def normalize_notes(notes: str) -> str:
     return (notes or "").strip()
@@ -82,8 +82,8 @@ def prepare_tutoring_data(booking: Booking):
     booking.status = normalize_status(booking.status)
     validate_status(booking.status)
 
-def find_bookings_by_tutor(booking_id: int):
-    bookings = get_booking_by_tutor(booking_id)
+def find_bookings_by_tutor(tutor_id: int):
+    bookings = get_booking_by_tutor(tutor_id)
 
     if bookings is None:
         raise ValueError("Booking search failed")

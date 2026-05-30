@@ -151,7 +151,7 @@ def update_booking_status(booking_id:int, status:str):
              UPDATE bookings
              SET status = %s
              WHERE booking_id = %s
-             RETURNING *
+             RETURNING booking_id, status
              """)
 
     values = (status, booking_id)
