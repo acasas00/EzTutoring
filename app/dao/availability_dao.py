@@ -110,3 +110,23 @@ def search_availability(search_term: str):
     conn.close()
 
     return availability
+
+def get_availability_by_tutor(tutor_id: int):
+    conn = get_connection()
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
+
+
+    query = ("""
+            SELECT *
+            FROM availability
+            WHERE tutor_id = %s
+    """)
+
+    cursor.execute(query, (tutor_id,))
+
+    availability = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return availability

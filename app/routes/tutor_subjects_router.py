@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from app.models.tutor_subjects import TutorSubject
 from app.schemas.tutor_subject_schema import TutorSubjectCreate, TutorSubjectResponse
-from app.services.tutor_subjects_service import assign_subject_to_tutor, remove_subject_from_tutor, get_subjects_by_tutor
+from app.services.tutor_subjects_service import assign_subject_to_tutor, remove_subject_from_tutor, get_subjects_by_tutor, find_all_tutor_subjects
 from typing import List
 
 router = APIRouter(
@@ -33,5 +33,12 @@ def remove_tutor_subject(tutor_id: int, subject_id: int):
 def search_tutor_subjects(search_term: str):
     try:
         return get_subjects_by_tutor(search_term)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@router.get("/", response_model = List[TutorSubjectResponse])
+def list_all_tutor_subjects():
+    try:
+        return find_all_tutor_subjects()
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))

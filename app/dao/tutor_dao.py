@@ -130,7 +130,8 @@ def display_tutors():
                 users.last_name,
                 users.email,
                 tutors.tutor_bio,
-                tutors.experience
+                tutors.experience,
+                tutors.profile_image
             FROM tutors
             JOIN users ON tutors.user_id = users.user_id
             WHERE users.role = 'tutor'
@@ -168,5 +169,28 @@ def get_tutor_by_email(email: str):
     conn.close()
 
     return tutor
+
+def upload_tutor_profile_photo(tutor_id:int, profile_image: str):
+    conn = get_connection()
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
+
+    query = """
+            UPDATE tutors
+            SET profile_image = %s
+            WHERE tutor_id = %s 
+            RETURNING *
+            """
+
+    values = (profile_image, tutor_id)
+    cursor.execute(query, values)
+
+    uploaded = cursor.fetchone()
+
+    conn.commit()
+
+    cursor.close()
+    conn.close()
+
+    return uploaded
 
 

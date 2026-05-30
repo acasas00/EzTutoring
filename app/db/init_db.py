@@ -29,7 +29,8 @@ def create_tutors_table():
                     user_id INTEGER UNIQUE NOT NULL,
                     FOREIGN KEY(user_id) REFERENCES users(user_id),
                     tutor_bio TEXT NOT NULL,
-                    experience INTEGER NOT NULL
+                    experience INTEGER NOT NULL,
+                    profile_image VARCHAR(255)
         );            
     """)
 

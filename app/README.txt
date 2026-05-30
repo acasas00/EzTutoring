@@ -1,1 +1,1 @@
--Add feature to reflect availability change when booking is created/removed
+-Add feature to reflect availability change when booking is created/removed <--actively doing this

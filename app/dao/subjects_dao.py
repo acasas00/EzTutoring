@@ -89,3 +89,20 @@ def get_subjects(search_term: str):
     connection.close()
 
     return subjects
+
+def get_all_subjects():
+    connection = get_connection()
+    cursor = connection.cursor(cursor_factory=RealDictCursor)
+
+    query = ("""
+             SELECT subjects.subject_id,
+                    subjects.subject_name
+             FROM subjects
+             """)
+
+    cursor.execute(query)
+    subjects = cursor.fetchall()
+
+    cursor.close()
+    connection.close()
+    return subjects

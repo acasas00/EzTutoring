@@ -1,5 +1,5 @@
 from app.models.tutor_subjects import TutorSubject
-from app.dao.tutor_subjects_dao import create_tutor_subjects, delete_tutor_subjects, search_tutor_subjects
+from app.dao.tutor_subjects_dao import create_tutor_subjects, delete_tutor_subjects, search_tutor_subjects, get_all_tutor_subjects
 
 def validate_id(_id: int):
     if not isinstance(_id, int) or _id <= 0:
@@ -33,5 +33,12 @@ def get_subjects_by_tutor(search_term:str):
     if not results:
         raise ValueError("Subject not found")
 
+    return results
+
+def find_all_tutor_subjects():
+    results = get_all_tutor_subjects()
+
+    if not results:
+        raise ValueError("No tutor subjects found")
     return results
 

@@ -121,3 +121,42 @@ def search_booking(search_term: str):
     conn.close()
 
     return booking
+
+def get_booking_by_tutor(tutor_id: int):
+    conn = get_connection()
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
+    query = ("""
+             SELECT
+             bookings.start_time,
+             bookings.end_time,
+             FROM bookings
+             WHERE tutor_id = %s
+             AND status IN ('Pending', 'Confirmed')
+             """)
+    cursor.execute(query, (tutor_id,))
+    booking = cursor.fetchone()
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return booking
+
+def update_booking_status(booking_id:int, status:str):
+    conn = get_connection()
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
+
+    query = ("""
+             UPDATE bookings
+             SET status = %s
+             WHERE booking_id = %s
+             RETURNING *
+             """)
+
+    values = (status, booking_id)
+    cursor.execute(query, values)
+    updated = cursor.fetchone()
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return updated

@@ -97,4 +97,27 @@ def search_tutor_subjects(search_term: str):
 
     return tutor_subjects
 
+def get_all_tutor_subjects():
+    conn = get_connection()
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
+
+    query = ("""
+             SELECT tutors.tutor_id,
+                    subjects.subject_id,
+                    users.first_name,
+                    users.last_name,
+                    subjects.subject_name
+             FROM tutor_subjects
+                      JOIN tutors ON tutor_subjects.tutor_id = tutors.tutor_id
+                      JOIN subjects ON tutor_subjects.subject_id = subjects.subject_id
+                      JOIN users ON tutors.user_id = users.user_id
+             """)
+
+    cursor.execute(query)
+    tutor_subjects = cursor.fetchall()
+    cursor.close()
+    conn.close()
+
+    return tutor_subjects
+
 

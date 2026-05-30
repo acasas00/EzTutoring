@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from app.models.subjects import Subject
 from app.schemas.subject_schema import SubjectUpdate,SubjectResponse
-from app.services.subjects_service import update_subject_details, search_subjects
+from app.services.subjects_service import update_subject_details, search_subjects, list_all_subjects
 from typing import List
 
 router = APIRouter(
@@ -27,4 +27,13 @@ def find_subjects(search_term: str):
         return search_subjects(search_term)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+@router.get("/list", response_model=List[SubjectResponse])
+def get_all_subjects():
+    try:
+        return list_all_subjects()
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
 

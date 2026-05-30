@@ -1,17 +1,22 @@
 import {Link} from "react-router-dom";
+import logo from "../assets/ez_icon.png"
 
 export default function Navbar(){
     return(
         <nav className="navbar">
             <div className="logo">
-                EZ Tutoring
+                <img src ={logo} alt="EZ Tutoring" className="main-logo" />
+                <div className="logo-text">
+                    <h1>EZ Tutoring</h1>
+                    <p>Helping Students Succeed</p>
+                </div>
             </div>
 
-            <div>
-                <Link to="/">Home</Link>{"|"}
-                <Link to="/tutors">Our Tutors</Link>{"|"}
-                <Link to="/bookings">Book Session</Link>{"|"}
-                <Link to="/testimonials">Testimonials</Link>
+            <div className="nav-links">
+                <Link to="/">Home</Link>
+                <Link to="/tutors">Our Tutors</Link>
+                <Link to="/services">Our Services</Link>
+                <Link to="/bookings">Book Session</Link>
             </div>
 
             <div>

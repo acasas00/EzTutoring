@@ -1,5 +1,5 @@
 from app.models.subjects import Subject
-from app.dao.subjects_dao import create_subject, update_subject, delete_subject, get_subjects
+from app.dao.subjects_dao import create_subject, update_subject, delete_subject, get_subjects, get_all_subjects
 import re
 
 SUBJECT_NAME_MAX_LENGTH = 100
@@ -51,6 +51,14 @@ def delete_subject_record(subject_id: int):
 
 def search_subjects(search_term: str):
     subjects = get_subjects(search_term)
+
+    if not subjects:
+        raise ValueError("No subjects found")
+
+    return subjects
+
+def list_all_subjects():
+    subjects = get_all_subjects()
 
     if not subjects:
         raise ValueError("No subjects found")

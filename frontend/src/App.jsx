@@ -6,6 +6,7 @@ import Tutors from "./pages/Tutors.jsx"
 import Bookings from "./pages/Bookings.jsx"
 import Testimonials from "./pages/Testimonials.jsx";
 import Login from "./pages/Login.jsx";
+import Services from "./pages/Services.jsx";
 
 function App(){
   return(
@@ -13,11 +14,12 @@ function App(){
         <Navbar/>
 
         <Routes>
-          <Route path ="/" element={<Home />}/>
-          <Route path ="/tutors" element={<Tutors />}/>
-          <Route path ="/bookings" element={<Bookings />}/>
-          <Route path ="/testimonials" element={<Testimonials />}/>
-          <Route path ="/login" element={<Login />}/>
+            <Route path ="/" element={<Home />}/>
+            <Route path ="/tutors" element={<Tutors />}/>
+            <Route path="/services" element={<Services />}/>
+            <Route path ="/bookings" element={<Bookings />}/>
+            <Route path ="/testimonials" element={<Testimonials />}/>
+            <Route path ="/login" element={<Login />}/>
         </Routes>
       </BrowserRouter>
   )

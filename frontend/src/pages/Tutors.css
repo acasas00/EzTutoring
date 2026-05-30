@@ -1,0 +1,121 @@
+.tutors-page {
+    padding: 50px;
+    background: radial-gradient(circle at center, #183b70 0%, #0B1F4D 65%);
+    color: white;
+
+}
+
+.tutors-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.tutors-header h1 {
+    font-size: 3rem;
+    color: white;
+    margin-bottom: 10px;
+}
+
+.tutors-header p {
+    color: #d0d0d0;
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+}
+
+.search-filter-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.search-bar {
+    width: 400px;
+    padding: 14px 20px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+}
+
+.subject-filter {
+    padding: 14px 20px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+}
+
+.tutors-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(320px, 1fr));
+    gap: 30px;
+}
+
+.tutor-card {
+    background: #202424;
+    border-radius: 15px;
+    padding: 30px;
+
+    text-align: center;
+    width: 250px;
+    border: 2px solid #F4C542;
+    box-shadow:
+        0 0 12px rgba(244, 197, 66, 0.25),
+        0 6px 14px rgba(0,0,0,.25);
+}
+
+
+.tutor-photo {
+    width: 130px;
+    height: 130px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    background: #d9d9d9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #555;
+
+    font-weight: bold;
+    object-fit: cover;
+    border: 4px solid #F4C542;
+}
+
+.subject-badges {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.subject-badges span {
+    background: #F4C542;
+    color: #0B1F4D;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: .85rem;
+    font-weight: bold;
+}
+
+.book-btn {
+    margin-top: 20px;
+    background: #F4C542;
+    color: #0B1F4D;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.tutors-grid {
+    display: flex;
+    justify-content: center;
+}
+
+.tutor-photo-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
