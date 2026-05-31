@@ -1,3 +1,4 @@
+from typing import Optional
 from pydantic import BaseModel, EmailStr
 
 class TutorCreate(BaseModel):
@@ -23,8 +24,8 @@ class TutorResponse(BaseModel):
     email: EmailStr
     tutor_bio: str
     experience: int
-    profile_image: str
+    profile_image: Optional[str] = None
 
 class TutorProfileImageResponse(BaseModel):
     tutor_id: int
-    profile_image: str
+    profile_image: Optional[str] = None

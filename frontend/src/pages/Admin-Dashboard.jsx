@@ -5,7 +5,7 @@ export default function AdminDashboard() {
     return (
         <main className="dashboard-page">
 
-            <h1>Tutor Dashboard</h1>
+            <h1>Admin Dashboard</h1>
 
             <div className="dashboard-grid">
 
