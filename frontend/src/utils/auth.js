@@ -11,3 +11,7 @@ export function getCurrentUser() {
         return null;
     }
 }
+
+export function logout() {
+    localStorage.removeItem("token");
+}

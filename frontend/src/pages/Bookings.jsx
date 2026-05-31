@@ -1,6 +1,8 @@
 import "./Bookings.css";
 import {useEffect, useState} from "react";
 import {getCurrentUser} from "../utils/auth.js";
+import { useNavigate, useLocation } from "react-router-dom";
+
 
 export default function Bookings() {
     const[tutors, setTutors] = useState([]);
@@ -16,6 +18,8 @@ export default function Bookings() {
     const [selectedSubject, setSelectedSubject] = useState("");
     const [tutorSubjects, setTutorSubjects] = useState([]);
     const currentUser = getCurrentUser();
+    const navigate = useNavigate();
+    const location = useLocation()
 
     const filteredTutors = tutors.filter((tutor) =>
         tutorSubjects.some(
@@ -26,6 +30,20 @@ export default function Bookings() {
     );
 
     const handleBooking =async() =>{
+        const token = localStorage.getItem("token");
+        if(!token) {
+            alert("Login Required");
+            navigate(
+                "/login",
+                {
+                    state:{
+                        redirectTo: location.pathname
+                    }
+                }
+            );
+            return;
+        }
+
         if(!selectedTutor){
             alert("Select a tutor");
             return;
@@ -38,7 +56,7 @@ export default function Bookings() {
 
         const bookingData = {
             tutor_id: Number(selectedTutor),
-            client_id: currentUser.id,
+            client_id: currentUser.user_id,
             start_time: selectedSlot.start_time,
             end_time: selectedSlot.end_time,
             subject_id: Number(selectedSubject),

@@ -7,6 +7,7 @@ import Bookings from "./pages/Bookings.jsx"
 import Testimonials from "./pages/Testimonials.jsx";
 import Login from "./pages/Login.jsx";
 import Services from "./pages/Services.jsx";
+import Register from "./pages/Register.jsx";
 
 function App(){
   return(
@@ -20,6 +21,7 @@ function App(){
             <Route path ="/bookings" element={<Bookings />}/>
             <Route path ="/testimonials" element={<Testimonials />}/>
             <Route path ="/login" element={<Login />}/>
+            <Route path ="/register" element={<Register />}/>
         </Routes>
       </BrowserRouter>
   )
