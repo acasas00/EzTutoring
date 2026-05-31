@@ -1,2 +1,3 @@
 -Add feature to reflect availability change when booking is created/removed
 -admin change of booking type to online/InPerson --> depending on user call request rather than actual change
+-line 41 in bookings.jsx likely needs revision
