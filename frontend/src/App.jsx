@@ -8,6 +8,8 @@ import Testimonials from "./pages/Testimonials.jsx";
 import Login from "./pages/Login.jsx";
 import Services from "./pages/Services.jsx";
 import Register from "./pages/Register.jsx";
+import TutorDashboard from "./pages/TutorDashboard";
+import AdminDashboard from "./pages/Admin-Dashboard.jsx";
 
 function App(){
   return(
@@ -22,6 +24,8 @@ function App(){
             <Route path ="/testimonials" element={<Testimonials />}/>
             <Route path ="/login" element={<Login />}/>
             <Route path ="/register" element={<Register />}/>
+            <Route path ="/tutor-dashboard" element={<TutorDashboard />}/>
+            <Route path ="/admin-dashboard" element={<AdminDashboard />}/>
         </Routes>
       </BrowserRouter>
   )

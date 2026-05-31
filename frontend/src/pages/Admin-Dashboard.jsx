@@ -1,6 +1,6 @@
-import "./TutorDashboard.css";
+import "./AdminDashboard.css";
 
-export default function TutorDashboard() {
+export default function AdminDashboard() {
 
     return (
         <main className="dashboard-page">

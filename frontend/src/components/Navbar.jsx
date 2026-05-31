@@ -1,9 +1,11 @@
 import {Link, useNavigate} from "react-router-dom";
 import logo from "../assets/ez_icon.png";
+import {getCurrentUser} from "../utils/auth.js";
 
 export default function Navbar(){
 
     const navigate = useNavigate();
+    const currentUser = getCurrentUser();
 
     const token = localStorage.getItem("token");
 
@@ -27,6 +29,20 @@ export default function Navbar(){
 
             <div className="nav-links">
                 <Link to="/">Home</Link>
+                {
+                    currentUser?.role === "tutor" && (
+                    <Link to="/tutor-dashboard">
+                        Dashboard
+                    </Link>
+                    )
+                }
+                {
+                    currentUser?.role === "admin" && (
+                    <Link to="/admin-dashboard">
+                        Dashboard
+                    </Link>
+                    )
+                }
                 <Link to="/tutors">Our Tutors</Link>
                 <Link to="/services">Our Services</Link>
                 <Link to="/bookings">Book Session</Link>

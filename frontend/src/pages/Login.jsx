@@ -2,6 +2,7 @@ import "./Login.css";
 import {useState} from "react";
 import {Link} from "react-router-dom";
 import { useNavigate, useLocation } from "react-router-dom";
+import {getCurrentUser} from "../utils/auth.js";
 
 export default function Login() {
     const [email,setEmail] =useState("");
@@ -43,7 +44,17 @@ export default function Login() {
                 data.access_token
             );
 
-            navigate(location.state?.redirectTo || "/");
+            const currentUser = getCurrentUser();
+            if (location.state?.redirectTo) {
+                navigate(location.state.redirectTo)
+            }
+            else if(currentUser.role === "tutor") {
+                navigate("/tutor-dashboard");
+            }
+            else{
+                navigate("/")
+            }
+
 
         } catch(error){
             console.error(error);
