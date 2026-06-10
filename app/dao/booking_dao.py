@@ -163,4 +163,34 @@ def update_booking_status(booking_id:int, status:str):
     conn.close()
     return updated
 
+def get_bookings():
+    conn = get_connection()
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
+
+    query = ("""
+           SELECT
+                b.*,
+                client.first_name AS client_first_name,
+                client.last_name AS client_last_name,
+                tutor_user.first_name AS tutor_first_name,
+                tutor_user.last_name AS tutor_last_name,
+                s.subject_name
+            FROM bookings b
+            JOIN users client
+                ON b.client_id = client.user_id
+            JOIN tutors t
+                ON b.tutor_id = t.tutor_id
+            JOIN users tutor_user
+                ON t.user_id = tutor_user.user_id
+            JOIN subjects s
+                ON b.subject_id = s.subject_id
+            """)
+
+    cursor.execute(query)
+    bookings = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+    return bookings
+
 #admin change of booking type in future

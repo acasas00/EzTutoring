@@ -2,11 +2,13 @@ from fastapi import APIRouter, Depends, HTTPException
 from typing import List
 from app.models.subjects import Subject
 from app.models.tutor_profile import Tutor
+from app.schemas.booking_schema import BookingResponse, BookingAdminResponse
 from app.schemas.tutor_schema import TutorResponse, TutorCreate
 from app.schemas.user_schema import UserResponse, UserCreate
 from app.schemas.subject_schema import SubjectCreate, SubjectResponse
 from app.dependencies.auth_dependency import require_admin
 from app.models.user import User
+from app.services.booking_service import display_bookings
 from app.services.admin_service import (
     create_tutor_account,
     delete_tutor_account,
@@ -96,5 +98,13 @@ def admin_account_deletion(user_id: int, current_user = Depends(require_admin)):
             raise HTTPException(status_code=403, detail="Unable to delete self")
 
         return delete_admin_account(user_id)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@router.get("/bookings", response_model=List[BookingAdminResponse])
+def find_all_bookings(current_user=Depends(require_admin)):
+
+    try:
+        return display_bookings()
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
