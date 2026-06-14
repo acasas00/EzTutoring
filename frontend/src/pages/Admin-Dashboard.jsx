@@ -1,6 +1,5 @@
 import "./AdminDashboard.css";
 import {useState, useEffect, use} from "react";
-import {create} from "axios";
 
 export default function AdminDashboard() {
 
@@ -10,6 +9,14 @@ export default function AdminDashboard() {
     const [subjects, setSubjects] = useState([]);
     const [newSubject, setNewSubject] = useState("");
     const [bookings, setBookings] = useState([]);
+    const [newTutorEmail, setNewTutorEmail] = useState("");
+    const [newTutorBio, setNewTutorBio] = useState("");
+    const [newTutorExperience, setNewTutorExperience] = useState("");
+    const [showHistoryModal, setShowHistoryModal] = useState(false);
+    const [selectedUserBookings, setSelectedUserBookings] = useState([]);
+    const [selectedUserName, setSelectedUserName] = useState("")
+    const [userSearch, setUserSearch] = useState("");
+    const [tutorSearch, setTutorSearch] = useState("");
 
    const pendingBookings = Array.isArray(bookings)
     ? bookings.filter(
@@ -165,7 +172,7 @@ export default function AdminDashboard() {
                  throw new Error("Delete failed");
              }
 
-             setSubject(
+             setSubjects(
                  subjects.filter(
                      subject => subject.subject_id !== subjectId
                  )
@@ -173,6 +180,24 @@ export default function AdminDashboard() {
         } catch (error) {
             console.log(error);
             alert("Unable to delete subject");
+        }
+    }
+
+    const handleViewUserBookings = async (user) =>{
+        try{
+            const response = await fetch(`http://127.0.0.1:8000/bookings/tutor_bookings/${user.user_id}`);
+            if (!response.ok){
+                throw new Error("Failed to display bookings");
+            }
+
+            const data = await response.json();
+            setSelectedUserBookings(data);
+            setSelectedUserName(`${user.first_name} ${user.last_name}`);
+            setShowHistoryModal(true);
+
+        }catch(error){
+            console.error(error);
+            alert("Booking history not loaded");
         }
     }
 
@@ -242,6 +267,68 @@ export default function AdminDashboard() {
       )
     : [];
 
+    const handleBookingStatus = async(
+        bookingId, status) => {
+        const token = localStorage.getItem("token");
+        try {
+            const response = await fetch(`http://127.0.0.1:8000/bookings/${bookingId}/status?status=${status}`,
+                {
+                    method: "PUT",
+                    headers: {Authorization: `Bearer ${token}`}
+                });
+
+            if (!response.ok) {
+                throw new Error("Failed status update")
+            }
+
+            setBookings(
+                bookings.map((booking) =>
+                    booking.booking_id === bookingId ? {
+                        ...booking, status: status
+                    } : booking)
+            );
+        } catch (error) {
+            console.error(error);
+            alert("Unable to update booking");
+        }
+    }
+
+    const filteredTutors = tutors.filter((tutor) =>
+    `${tutor.first_name} ${tutor.last_name}`
+        .toLowerCase()
+        .includes(tutorSearch.toLowerCase())
+    )
+
+    const filteredUsers = users.filter((user) =>
+        `${user.first_name} ${user.last_name} ${user.email}`
+            .toLowerCase()
+            .includes(userSearch.toLowerCase())
+    )
+
+    const handleDeleteTutor = async (tutorId) => {
+        const token = localStorage.getItem("token");
+
+        if(!window.confirm("Delete Tutor?")){return}
+
+        try{
+            const response = await fetch(`http://127.0.0.1:8000/admin/tutors/${tutorId}`,
+                {
+                    method: "DELETE",
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+
+            if (!response.ok){throw new Error("Delete failed");}
+
+            setTutors(tutors.filter(
+                tutor => tutor.tutor_id !== tutorId
+            ));
+        } catch(error){
+            console.error(error);
+            alert("Cannot delete tutor");
+        }}
+
     return (
         <main className="dashboard-page">
 
@@ -282,13 +369,6 @@ export default function AdminDashboard() {
                     onClick={() => setActiveTab("users")}
                 >
                     Users
-                </button>
-
-                <button
-                    className={activeTab === "availability" ? "active-tab" : ""}
-                    onClick={() => setActiveTab("availability")}
-                >
-                    Availability
                 </button>
 
             </nav>
@@ -368,16 +448,36 @@ export default function AdminDashboard() {
                                         Notes: {booking.notes}
                                     </p>
 
+                                    {booking.status === "pending" ? (
+                                        <span className="status-badge pending">
+                                            Pending
+                                        </span>
+                                    ) : booking.status === "confirmed" ? (
+                                        <span className="status-badge accepted">
+                                            Confirmed
+                                        </span>
+                                    ) : (
+                                        <span className="status-badge rejected">
+                                            Rejected
+                                        </span>
+                                    )}
+
+                                    {booking.status === "pending" && (
                                     <div className="booking-actions">
-                                        <button className="approve-btn">
+                                        <button className="approve-btn"
+                                        onClick={() =>
+                                            handleBookingStatus(booking.booking_id, "confirmed")}>
                                             Approve
                                         </button>
-                                        <button className="reject-btn">
+                                        <button className="reject-btn"
+                                        onClick={() =>
+                                            handleBookingStatus(booking.booking_id, "rejected")}>
                                             Reject
                                         </button>
-
                                     </div>
+                                        )}
                                 </div>
+
                             ))
                         )}
 
@@ -431,8 +531,8 @@ export default function AdminDashboard() {
                                     booking => booking.status === "pending"
                                 ).length;
 
-                                const acceptedCount = dayBookings.filter(
-                                    booking => booking.status === "accepted"
+                                const confirmedCount = dayBookings.filter(
+                                    booking => booking.status === "confirmed"
                                 ).length;
 
                                 const isPast =
@@ -448,7 +548,7 @@ export default function AdminDashboard() {
                                 else if(pendingCount >0){
                                     dayClass += " pending-day";
                                 }
-                                else if(acceptedCount > 0){
+                                else if(confirmedCount > 0){
                                     dayClass +=" accepted-day";
                                 }
 
@@ -476,18 +576,45 @@ export default function AdminDashboard() {
             )}
 
             {activeTab === "tutors" && (
-                <section className="dashboard-card">
-                    <h2>Tutors</h2>
-                </section>
+                <>
+                    <div className="tutor-search-container">
+                        <input
+                            className="admin-input"
+                            type="text"
+                            placeholder="Search Tutor"
+                            value={tutorSearch}
+                            onChange={(e) =>
+                                setTutorSearch(e.target.value)
+                            }/></div>
+
+                    <section className="tutors-grid">
+                        {filteredTutors.map((tutor) => (
+                            <div key={tutor.tutor_id} className="dashboard-card">
+                                <h2>{tutor.first_name} {tutor.last_name}</h2>
+                                <p><strong>Email:</strong> {tutor.email}</p>
+                                <p><strong>Experience:</strong> {tutor.experience}</p>
+                                <p>{tutor.tutor_bio}</p>
+
+                                <button
+                                    className="admin-delete-btn" onClick={() => handleDeleteTutor(tutor.tutor_id)}
+                                >
+                                    Delete Tutor
+                                </button>
+                                <button
+                                    className="view-availability-btn" onClick={() => handleViewAvailability(tutor)}
+                                    >
+                                    View Availability
+                                </button>
+                            </div>
+                        ))}
+                    </section>
+                </>
             )}
 
             {activeTab === "subjects" && (
                 <section className="dashboard-grid">
-
                     <div className="dashboard-card">
-
                         <h2>Add Subject</h2>
-
                         <input
                             className="admin-input"
                             type="text"
@@ -509,79 +636,94 @@ export default function AdminDashboard() {
 
                     {subjects.map((subject) => (
 
-                        <div
-                            key={subject.subject_id}
-                            className="dashboard-card"
-                        >
-
-                            <h2>
-                                {subject.subject_name}
-                            </h2>
-
-                            <p>
-                                Subject ID: {subject.subject_id}
-                            </p>
-
+                        <div key={subject.subject_id} className="dashboard-card">
+                            <h2>{subject.subject_name}</h2>
+                            <p>Subject ID: {subject.subject_id}</p>
                             <button
                                 className="admin-delete-btn"
                                 onClick={() =>
                                     handleDeleteSubject(
                                         subject.subject_id
-                                    )
-                                }
-                            >
+                                    )}>
                                 Delete Subject
                             </button>
                         </div>
                     ))}
-                </section>
-        )}
-            )
+                </section>)})
 
             {activeTab === "users" && (
-            <section className="dashboard-grid">
-                {clients.length === 0 ? (
-                    <div className="dashboard-card">
-                        <h2>No Users Found</h2>
+                <>
+                    <div className="tutor-search-container">
+                        <input
+                            className="admin-input"
+                            type="text"
+                            placeholder="Search User"
+                            value={userSearch}
+                            onChange={(e) => setUserSearch(e.target.value)}
+                        />
                     </div>
-                ) : (
-                    clients.map((user) => (
-                        <div
-                            key={user.user_id}
-                            className="dashboard-card">
-                            <h2>
-                                {user.first_name} {user.last_name}
-                            </h2>
 
-                            <p>
-                                <strong>Email:</strong> {user.email}
-                            </p>
+                    <section className="dashboard-grid">
+                        {filteredUsers.length === 0 ? (
+                            <div className="dashboard-card">
+                                <h2>No Users Found</h2>
+                            </div>
+                        ) : (
+                            filteredUsers.map((user) => (
+                                <div
+                                    key={user.user_id}
+                                    className="dashboard-card"
+                                >
+                                    <h2>{user.first_name} {user.last_name}</h2>
 
-                            <p>
-                                <strong>Phone:</strong> {user.phone_number}
-                            </p>
+                                    <p><strong>Email:</strong> {user.email}</p>
+                                    <p><strong>Phone:</strong> {user.phone_number}</p>
+                                    <p><strong>User ID:</strong> {user.user_id}</p>
 
-                            <p>
-                                <strong>User ID:</strong> {user.user_id}
-                            </p>
+                                    <button
+                                        className="admin-action-btn"
+                                        onClick={() => handleViewUserBookings(user)}
+                                    >
+                                        View History
+                                    </button>
 
-                            <button
-                                className="admin-delete-btn"
-                                onClick ={() => handleDeleteUser(user.user_id)}
-                            >
-                                Delete User
-                            </button>
-                        </div>
-                    ))
-                )}
-            </section>
+                                    <button
+                                        className="admin-delete-btn"
+                                        onClick={() => handleDeleteUser(user.user_id)}
+                                    >
+                                        Delete User
+                                    </button>
+                                </div>
+                            ))
+                        )}
+                    </section>
+                </>
             )}
 
-            {activeTab === "availability" && (
-                <section className="dashboard-card">
-                    <h2>Availability</h2>
-                </section>
-            )}
+             {showHistoryModal && (
+            <div className="modal-overlay">
+
+                <div className="modal-content">
+
+                    <button
+                        className="modal-close"
+                        onClick={() => setShowHistoryModal(false)}
+                    >✕
+                    </button>
+
+                    <h2>{selectedUserName} Booking History</h2>
+
+                    {selectedUserBookings.length === 0 ? (<p>No bookings found.</p>) :
+                        (selectedUserBookings.map((booking) => (<div key={booking.booking_id} className="history-item">
+                                <p><strong>Booking ID:</strong>{" "}{booking.booking_id}</p>
+                                <p><strong>Status:</strong>{" "}{booking.status}</p>
+                                <p><strong>Start:</strong>{" "}{new Date(booking.start_time).toLocaleString()}</p>
+                                <p><strong>Notes:</strong>{" "}{booking.notes}</p>
+                            </div>
+                        )))}
+                </div>
+            </div>
+        )}
 
         </main>
     );

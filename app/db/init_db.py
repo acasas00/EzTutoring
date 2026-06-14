@@ -120,6 +120,24 @@ def create_availability_table():
     cursor.close()
     conn.close()
 
+def create_contacts_table():
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""CREATE TABLE IF NOT EXISTS contact_messages
+                      (
+                          message_id SERIAL PRIMARY KEY,
+                          full_name VARCHAR(100) NOT NULL,
+                          email VARCHAR(100) NOT NULL,
+                          phone VARCHAR(20)  NOT NULL,
+                          interests VARCHAR(100) NOT NULL,
+                          message TEXT NOT NULL DEFAULT '',
+                          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                          status VARCHAR(20) DEFAULT 'new',
+                          is_read BOOLEAN DEFAULT FALSE
+                      );
+                    """)
+
 if __name__ == "__main__":
     create_users_table()
     create_tutors_table()

@@ -1,7 +1,9 @@
 from fastapi import APIRouter, HTTPException
 from typing import List
 from app.schemas.booking_schema import BookingCreate, BookingUpdate, BookingResponse, BookingStatusResponse
-from app.services.booking_service import create_tutoring_booking, update_tutoring_booking, delete_tutoring_booking, search_tutoring_booking, find_bookings_by_tutor, change_booking_status
+from app.services.booking_service import create_tutoring_booking, update_tutoring_booking, delete_tutoring_booking, \
+    search_tutoring_booking, find_bookings_by_tutor, change_booking_status, find_bookings_by_tutor, \
+    find_bookings_by_users
 from app.models.booking import Booking
 
 router = APIRouter(
@@ -75,5 +77,12 @@ def tutor_bookings(tutor_id: int):
 def booking_status(booking_id: int, status: str):
     try:
         return change_booking_status(booking_id,status)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@router.get("/tutor_bookings/{user_id}", response_model=List[BookingResponse])
+def client_bookings(user_id: int):
+    try:
+        return find_bookings_by_users(user_id)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))

@@ -1,6 +1,6 @@
 from datetime import datetime
 from app.models.booking import Booking
-from app.dao.booking_dao import create_booking, update_booking, delete_booking, search_booking, get_booking_by_tutor, update_booking_status, get_bookings
+from app.dao.booking_dao import create_booking, update_booking, delete_booking, search_booking, get_booking_by_tutor, update_booking_status, get_bookings, get_booking_by_client
 
 NOTES_MAX_LENGTH = 250
 MEETING_LINK_MAX_LENGTH = 400
@@ -103,6 +103,14 @@ def change_booking_status(booking_id: int, status: str):
 
 def display_bookings():
     bookings = get_bookings()
+
+    if bookings is None:
+        raise ValueError("Booking search failed")
+
+    return bookings
+
+def find_bookings_by_users(user_id: int):
+    bookings = get_booking_by_client(user_id)
 
     if bookings is None:
         raise ValueError("Booking search failed")

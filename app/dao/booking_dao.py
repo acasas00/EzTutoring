@@ -193,4 +193,29 @@ def get_bookings():
     conn.close()
     return bookings
 
+def get_booking_by_client(client_id: int):
+    conn = get_connection()
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
+    query = ("""
+             SELECT
+                b.*,
+                s.subject_name,
+                tutor_user.first_name AS tutor_first_name,
+                tutor_user.last_name AS tutor_last_name
+             FROM bookings b
+             JOIN tutors t
+                 ON b.tutor_id = t.tutor_id
+             JOIN users tutor_user
+                 ON t.user_id = tutor_user.user_id
+             JOIN subjects s
+                 ON b.subject_id = s.subject_id
+             WHERE b.client_id = %s
+             """)
+    cursor.execute(query, (client_id,))
+    bookings = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+    return bookings
+
 #admin change of booking type in future
