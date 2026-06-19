@@ -81,29 +81,29 @@ def display_all_messages_by_interests(search_term: str):
 
     return display_messages_by_interests(search_term)
 
-def update_status(contact_message: ContactMessage, status: str):
+def update_status(contact_message_id: int, status: str):
     if status not in STATUS:
         raise ValueError("Status must be one of {}".format(STATUS))
 
-    update = update_message_status(contact_message.message_id, status)
+    update = update_message_status(contact_message_id, status)
     if not update:
         raise ValueError("Contact message was not updated")
 
     return update
 
-def mark_msg_as_read(contact_message: ContactMessage):
-    marked = mark_message_as_read(contact_message.message_id)
+def mark_msg_as_read(contact_message_id: int):
+    marked = mark_message_as_read(contact_message_id)
 
     if not marked:
         raise ValueError("Contact message was not marked for read")
 
     return marked
 
-def display_all_msgs_by_id(message_id: int):
-    return display_message_by_id(message_id)
+def display_all_msgs_by_id(contact_message_id: int):
+    return display_message_by_id(contact_message_id)
 
-def delete_msg(message_id: int):
-    delete = delete_message(message_id)
+def delete_msg(contact_message_id: int):
+    delete = delete_message(contact_message_id)
 
     if not delete:
         raise ValueError("Contact message was not deleted")

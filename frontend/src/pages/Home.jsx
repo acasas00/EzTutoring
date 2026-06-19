@@ -14,9 +14,10 @@ export default function Home() {
                     designed to help students build confidence and stay organized.
                 </p>
                 <div className="hero-btn">
-                    <Link className="hero-book-btn" to="/bookings">
+                    {/*<Link className="hero-book-btn" to="/bookings">
                         Book a Session
                     </Link>
+                    */}
                     <Link className="hero-services-btn" to="/services">
                         Learn About Our Services
                     </Link>

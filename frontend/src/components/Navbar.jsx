@@ -29,13 +29,14 @@ export default function Navbar(){
 
             <div className="nav-links">
                 <Link to="/">Home</Link>
-                {
+                {/*{
                     currentUser?.role === "tutor" && (
                     <Link to="/tutor-dashboard">
                         Dashboard
                     </Link>
                     )
                 }
+                */}
                 {
                     currentUser?.role === "admin" && (
                     <Link to="/admin-dashboard">
@@ -45,10 +46,10 @@ export default function Navbar(){
                 }
                 <Link to="/tutors">Our Tutors</Link>
                 <Link to="/services">Our Services</Link>
-                <Link to="/bookings">Book Session</Link>
+                {/*<Link to="/bookings">Book Session</Link>*/}
             </div>
 
-            <div>
+            {/*} <div>
                 {token ? (
                         <button className="login-btn" onClick={handleLogout}>
                             Logout
@@ -60,6 +61,7 @@ export default function Navbar(){
                     )
                 }
             </div>
+            */}
         </nav>
     );
 }

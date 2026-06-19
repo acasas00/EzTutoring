@@ -1,3 +1,4 @@
+{/*
 import "./Bookings.css";
 import {useEffect, useState} from "react";
 import {getCurrentUser} from "../utils/auth.js";
@@ -354,3 +355,5 @@ export default function Bookings() {
         </main>
     );
 }
+
+*/}

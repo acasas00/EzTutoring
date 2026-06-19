@@ -17,6 +17,9 @@ export default function AdminDashboard() {
     const [selectedUserName, setSelectedUserName] = useState("")
     const [userSearch, setUserSearch] = useState("");
     const [tutorSearch, setTutorSearch] = useState("");
+    const [messages, setMessages] = useState([]);
+    const [messageSearch, setMessageSearch] = useState("");
+    const [selectedMessage, setSelectedMessage] = useState(null);
 
    const pendingBookings = Array.isArray(bookings)
     ? bookings.filter(
@@ -72,6 +75,11 @@ export default function AdminDashboard() {
         return response.json();})
     .then(data => {if(data){setBookings(data);}})
     .catch(error => console.error(error));
+
+    fetch("http://127.0.0.1:8000/contact-messages/search/all")
+        .then(response => response.json())
+        .then(data => setMessages(data))
+        .catch(error => console.error(error));
 
 }, []);
 
@@ -369,6 +377,13 @@ export default function AdminDashboard() {
                     onClick={() => setActiveTab("users")}
                 >
                     Users
+                </button>
+
+                <button
+                    className={activeTab === "inbox" ? "active-tab" : ""}
+                    onClick={() => setActiveTab("inbox")}
+                    >
+                    Inbox
                 </button>
 
             </nav>
@@ -700,6 +715,41 @@ export default function AdminDashboard() {
                 </>
             )}
 
+            {activeTab === "inbox" && (
+                <>
+                    <div className="tutor-search-container">
+                        <input
+                            className="admin-input"
+                            type="text"
+                            placeholder="Search Messages"
+                            value={messageSearch}
+                            onChange={(e) => setMessageSearch((e.target.value))}
+                            />
+                    </div>
+                    <section className="dashboard-grid">
+                        {messages.map((message) => (
+                            <div
+                            key={message.message_id}
+                            className="dashboard-card">
+                                <h2>{message.full_name}</h2>
+                                <p><strong>Email:</strong> {message.email}</p>
+                                <p><strong>Phone Number:</strong> {message.phone}</p>
+                                <p><strong>Interests:</strong> {message.interests}</p>
+                                <p><strong>Status:</strong> {message.status}</p>
+
+                                <button
+                                    className="admin-action-btn"
+                                    onClick={()=> setSelectedMessage(message)}
+                                    >
+                                    View Message
+                                </button>
+
+                            </div>
+                        ))}
+                    </section>
+                </>
+            )}
+
              {showHistoryModal && (
             <div className="modal-overlay">
 
@@ -724,7 +774,6 @@ export default function AdminDashboard() {
                 </div>
             </div>
         )}
-
         </main>
     );
 }
