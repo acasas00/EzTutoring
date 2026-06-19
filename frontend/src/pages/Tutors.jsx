@@ -4,22 +4,6 @@ import {useEffect, useState} from "react";
 export default function Tutors() {
     const[tutors,setTutors] = useState([]);
     const[searchTerm, setSearchTerm] = useState("");
-    const [tutorSubjects, setTutorSubjects] = useState([]);
-    const [selectedSubject, setSelectedSubject] = useState("All Subjects");
-    const [subjects, setSubjects] = useState([]);
-
-    useEffect(() => {
-
-    fetch("http://127.0.0.1:8000/subjects/list/")
-        .then(response => response.json())
-        .then(data => {
-            setSubjects(data);
-        })
-        .catch(error => {
-            console.error(error);
-        });
-
-    }, []);
 
     useEffect(() => {
         fetch("http://127.0.0.1:8000/tutors")
@@ -33,36 +17,10 @@ export default function Tutors() {
 
     }, []);
 
-    useEffect(() => {
-
-    fetch("http://127.0.0.1:8000/tutor-subjects/")
-        .then(response => response.json())
-        .then(data => {
-            setTutorSubjects(data);
-        })
-        .catch(error => {
-            console.error(error);
-        });
-
-    }, []);
-
     const filteredTutors = tutors.filter((tutor) => {
-
-    const matchesName =
-        `${tutor.first_name} ${tutor.last_name}`
-            .toLowerCase()
-            .includes(
-                searchTerm.toLowerCase()
-            );
-
-    const tutorHasSubject =
-        selectedSubject === "All Subjects" || tutorSubjects.some((subject) =>
-                subject.tutor_id === tutor.tutor_id && subject.subject_name === selectedSubject
-        );
-    return (
-        matchesName &&
-        tutorHasSubject
-    );
+    return `${tutor.first_name} ${tutor.last_name}`
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
     });
 
     return (
@@ -85,24 +43,6 @@ export default function Tutors() {
                         value={searchTerm}
                         onChange={(e)=> setSearchTerm(e.target.value)}
                     />
-
-                    <select className="subject-filter"
-                            value={selectedSubject}
-                            onChange={(e)=> setSelectedSubject(e.target.value)}>
-
-                        <option>
-                            All Subjects
-                        </option>
-
-                        {subjects.map((subject) => (
-                            <option
-                                key={subject.subject_id}
-                                value={subject.subject_name}
-                            >
-                                {subject.subject_name}
-                            </option>
-                        ))}
-                    </select>
 
                 </div>
 
@@ -131,22 +71,6 @@ export default function Tutors() {
                             {" "}
                             {tutor.last_name}
                         </h2>
-
-                        <div className="subject-badges">
-                            {tutorSubjects
-                                .filter(
-                                    subject=>
-                                        subject.tutor_id === tutor.tutor_id)
-                                .map(subject => (
-                                    <span key ={
-                                        subject.subject_id
-                                    }
-                                >
-                                        {subject.subject_name}
-                                    </span>
-                                    )
-                                )}
-                        </div>
 
                         <p className="experience">
                             {tutor.experience} Years Experience

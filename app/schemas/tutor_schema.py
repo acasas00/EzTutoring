@@ -9,6 +9,7 @@ class TutorCreate(BaseModel):
     profile_image: Optional[str] = None
 
 class TutorUpdate(BaseModel):
+    tutor_id: int
     first_name: str
     last_name: str
     tutor_bio: str

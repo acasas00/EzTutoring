@@ -9,6 +9,7 @@ class ContactMessageCreate(BaseModel):
     message: str
 
 class ContactMessageResponse(ContactMessageCreate):
+    message_id: int
     created_at: datetime
     status: str
     is_read: bool

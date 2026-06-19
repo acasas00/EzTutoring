@@ -27,28 +27,39 @@ def create_tutor(tutor:Tutor):
 
     return created
 
-def update_tutor(tutor:Tutor):
+def update_tutor(tutor: Tutor):
     conn = get_connection()
     cursor = conn.cursor(cursor_factory=RealDictCursor)
 
     query = """
-            UPDATE tutors
-            SET first_name = %s, last_name = %s, tutor_bio = %s, experience = %s, tutor.tutor_id
-            WHERE tutor_id = %s
-            RETURNING *
-            """
+        UPDATE tutors
+        SET
+            first_name = %s,
+            last_name = %s,
+            tutor_bio = %s,
+            experience = %s
+        WHERE tutor_id = %s
+        RETURNING *
+    """
 
-    values = (tutor.first_name, tutor.last_name, tutor.tutor_bio, tutor.experience)
+    values = (
+        tutor.first_name,
+        tutor.last_name,
+        tutor.tutor_bio,
+        tutor.experience,
+        tutor.tutor_id
+    )
+
     cursor.execute(query, values)
 
     updated = cursor.fetchone()
+
     conn.commit()
 
     cursor.close()
     conn.close()
 
     return updated
-
 
 def delete_tutor(tutor_id:int):
     conn = get_connection()

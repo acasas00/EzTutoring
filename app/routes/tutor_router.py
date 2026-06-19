@@ -31,6 +31,7 @@ def find_tutors():
     try:
         return display_tutor_profiles()
     except ValueError as e:
+        print("ERROR:", e)
         raise HTTPException(status_code=400, detail=str(e))
 
 @router.put("/profile_image", response_model=TutorProfileImageResponse)
