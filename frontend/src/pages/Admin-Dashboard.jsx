@@ -21,7 +21,7 @@ export default function AdminDashboard() {
 
     const token = localStorage.getItem("token");
 
-    fetch("http://127.0.0.1:8000/admin/users",
+    fetch("https://eztutoring.onrender.com/admin/users",
     {
         headers: {
             Authorization: `Bearer ${token}`
@@ -36,12 +36,12 @@ export default function AdminDashboard() {
     .then(data => {if(data){setUsers(data);}})
     .catch(error => console.error(error));
 
-    fetch("http://127.0.0.1:8000/tutors/")
+    fetch("https://eztutoring.onrender.com/tutors/")
         .then(response => response.json())
         .then(data => setTutors(data))
         .catch(error => console.error(error));
 
-    fetch("http://127.0.0.1:8000/contact-messages/search/all")
+    fetch("https://eztutoring.onrender.com/contact-messages/search/all")
         .then(response => response.json())
         .then(data => setMessages(data))
         .catch(error => console.error(error));
@@ -58,7 +58,7 @@ export default function AdminDashboard() {
 
         try {
             const response = await fetch(
-                 `http://127.0.0.1:8000/users/${userId}`,
+                 `https://eztutoring.onrender.com/users/${userId}`,
                 {
                     method: "DELETE",
                     headers: {
@@ -100,7 +100,7 @@ export default function AdminDashboard() {
         if(!window.confirm("Delete Tutor?")){return}
 
         try{
-            const response = await fetch(`http://127.0.0.1:8000/admin/tutors/${tutorId}`,
+            const response = await fetch(`https://eztutoring.onrender.com/admin/tutors/${tutorId}`,
                 {
                     method: "DELETE",
                     headers: {
@@ -123,7 +123,7 @@ export default function AdminDashboard() {
     try {
 
         const response = await fetch(
-            "http://127.0.0.1:8000/tutors/",
+            "https://eztutoring.onrender.com/tutors/",
             {
                 method: "PUT",
                 headers: {
@@ -162,7 +162,7 @@ export default function AdminDashboard() {
         const token = localStorage.getItem("token");
 
         const response = await fetch(
-            "http://127.0.0.1:8000/admin/tutors",
+            "https://eztutoring.onrender.com/admin/tutors",
             {
                 method: "POST",
                 headers: {
@@ -195,7 +195,7 @@ export default function AdminDashboard() {
 
     try {
         await fetch(
-            `http://127.0.0.1:8000/contact-messages/${message.message_id}/is-read`,
+            `https://eztutoring.onrender.com/contact-messages/${message.message_id}/is-read`,
             {
                 method: "PUT"
             }
@@ -258,7 +258,7 @@ export default function AdminDashboard() {
         await Promise.all(
             selectedMessages.map((messageId) =>
                 fetch(
-                    `http://127.0.0.1:8000/contact-messages/${messageId}`,
+                    `https://eztutoring.onrender.com/contact-messages/${messageId}`,
                     {
                         method: "DELETE"
                     }
@@ -346,7 +346,7 @@ export default function AdminDashboard() {
                                     className="admin-tutor-image"
                                     src={
                                         tutor.profile_image
-                                            ? `http://127.0.0.1:8000${tutor.profile_image}`
+                                            ? `https://eztutoring.onrender.com${tutor.profile_image}`
                                             : "/default-profile.png"
                                     }
                                     alt={`${tutor.first_name} ${tutor.last_name}`}

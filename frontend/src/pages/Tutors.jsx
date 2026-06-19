@@ -6,7 +6,7 @@ export default function Tutors() {
     const[searchTerm, setSearchTerm] = useState("");
 
     useEffect(() => {
-        fetch("http://127.0.0.1:8000/tutors")
+        fetch("https://eztutoring.onrender.com/tutors")
             .then(response=>response.json())
             .then(data=>{
                 setTutors(data)
@@ -60,7 +60,7 @@ export default function Tutors() {
                                 className="tutor-photo"
                                 src={
                                     tutor.profile_image
-                                        ? `http://127.0.0.1:8000${tutor.profile_image}`
+                                        ? `https://eztutoring.onrender.com${tutor.profile_image}`
                                         : "/default-profile.png"}
                                 alt={`${tutor.first_name} ${tutor.last_name}`}
                             />
