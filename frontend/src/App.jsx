@@ -7,9 +7,6 @@ import Testimonials from "./pages/Testimonials.jsx";
 import Login from "./pages/Login.jsx";
 import Services from "./pages/Services.jsx";
 import AdminDashboard from "./pages/Admin-Dashboard.jsx";
-import Bookings from "./pages/Bookings.jsx"
-import Register from "./pages/Register.jsx";
-import TutorDashboard from "./pages/TutorDashboard";
 
 function App(){
   return(
@@ -22,9 +19,6 @@ function App(){
             <Route path="/services" element={<Services />}/>
             <Route path ="/testimonials" element={<Testimonials />}/>
             <Route path ="/login" element={<Login />}/>
-            {/*<Route path ="/register" element={<Register />}/>
-            <Route path ="/bookings" element={<Bookings />}/>
-            <Route path ="/tutor-dashboard" element={<TutorDashboard />}/> */}
             <Route path ="/admin-dashboard" element={<AdminDashboard />}/>
         </Routes>
       </BrowserRouter>
