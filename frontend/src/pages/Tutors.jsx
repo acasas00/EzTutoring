@@ -79,11 +79,6 @@ export default function Tutors() {
                         <p className="bio">
                             {tutor.tutor_bio}
                         </p>
-
-                        <button className="book-btn">
-                            Book Session
-                        </button>
-
                     </div>
                 ))}
 

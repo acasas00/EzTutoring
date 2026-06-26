@@ -28,3 +28,8 @@
 .admin-login-link:hover {
     background: rgba(244,197,66,0.25);
 }
+
+.contact-form textarea{
+    resize: none;
+    min-height:120px;
+}

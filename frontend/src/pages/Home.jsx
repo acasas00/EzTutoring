@@ -1,7 +1,77 @@
 import { Link } from "react-router-dom";
 import { FaInstagram } from "react-icons/fa";
+import {useState} from "react";
 
 export default function Home() {
+
+    const interestOptions = [
+        {value: "reading", label: "Reading" },
+        {value: "math", label: "Math" },
+        {value: "test_prep", label: "Test Prep" },
+        {value: "afterschool", label: "Afterschool" },
+        {value: "summer_camp", label: "Summer Camp" },
+        {value: "other", label: "Other"}
+    ];
+
+    const [fullName, setFullName] = useState("");
+    const [email, setEmail] = useState("");
+    const [phone, setPhone] = useState("");
+    const [interest, setInterest] = useState("");
+    const [studentName, setStudentName] = useState("");
+    const [studentGrade, setStudentGrade] = useState("");
+    const [studentAge, setStudentAge] = useState("");
+    const [message, setMessage] = useState("");
+    const [testPrepType, setTestPrepType] = useState("");
+
+    const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const contactMessage = {
+        full_name: fullName,
+        email: email,
+        phone: phone,
+        interests: interest,
+        message: `Student Name: ${studentName || "Not Provided"}
+        Student Grade: ${studentGrade || "Not Provided"}
+        Student Age: ${studentAge || "Not Provided"}${
+        interest === "test_prep"
+            ? `\nTest: ${testPrepType || "Not Provided"}`
+            : ""
+        }
+        
+        ${message || "No additional message."}`
+        };
+
+    try {
+        const response = await fetch("http://localhost:8000/contact-messages/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(contactMessage),
+        });
+
+        if (!response.ok) {
+            throw new Error("Failed to send message.");
+        }
+
+        alert("Message sent!");
+
+        setFullName("");
+        setEmail("");
+        setPhone("");
+        setInterest("");
+        setTestPrepType("");
+        setStudentName("");
+        setStudentGrade("");
+        setStudentAge("");
+        setMessage("");
+    } catch (err) {
+        console.error(err);
+        alert("Failed to send message.");
+    }
+};
+
     return (
         <main className="home-page">
             <a href="#contact" className="floating-contact-btn">
@@ -176,22 +246,104 @@ export default function Home() {
                 <h2>Contact Us</h2>
                 <p>Have questions? Send us a message and we’ll get back to you.</p>
 
-                <form className="contact-form">
-                    <input type="text" placeholder="Full Name" />
-                    <input type="email" placeholder="Email Address" />
-                    <input type="tel" placeholder="Phone Number" />
+                <form className="contact-form" onSubmit={handleSubmit}>
+                    <input
+                        type="text"
+                        placeholder="Full Name"
+                        value={fullName}
+                        onChange={(e) => setFullName(e.target.value)}
+                        required
+                    />
 
-                    <select>
-                        <option>What are you interested in?</option>
-                        <option>Reading, Writing & Math Tutoring</option>
-                        <option>Test Preparation</option>
-                        <option>Afterschool Program</option>
-                        <option>Summer Camp</option>
+                    <input
+                        type="email"
+                        placeholder="Email Address"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                    />
+
+                    <input
+                        type="tel"
+                        pattern="^\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$"
+                        placeholder="Phone Number"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        required
+                    />
+
+                    <select
+                        required
+                        value={interest}
+                        onChange={(e) => setInterest(e.target.value)}
+                    >
+                        <option value="" disabled>
+                            What are you interested in?
+                        </option>
+
+                        {interestOptions.map((option) => (
+                            <option
+                                key={option.value}
+                                value={option.value}
+                            >
+                                {option.label}
+                            </option>
+                        ))}
                     </select>
 
-                    <textarea placeholder="Message" rows="5"></textarea>
+                    {interest === "test_prep" && (
+                        <select
+                            value={testPrepType}
+                            onChange={(e) => setTestPrepType(e.target.value)}
+                            required
+                        >
+                            <option value="" disabled>
+                                Which test?
+                            </option>
 
-                    <button type="submit">Send Message</button>
+                            <option value="SAT">SAT</option>
+                            <option value="ACT">ACT</option>
+                            <option value="PSAT">PSAT</option>
+                            <option value="FAST">FAST / Florida Assessments</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    )}
+
+                    <input
+                        type="text"
+                        placeholder="Student Name"
+                        value={studentName}
+                        onChange={(e) => setStudentName(e.target.value)}
+                        required
+                    />
+
+                    <input
+                        type="text"
+                        placeholder="Student Grade"
+                        value={studentGrade}
+                        onChange={(e) => setStudentGrade(e.target.value)}
+                    />
+
+                    <input
+                        type="number"
+                        placeholder="Student Age"
+                        min="3"
+                        max="18"
+                        value={studentAge}
+                        onChange={(e) => setStudentAge(e.target.value)}
+                    />
+
+                    <textarea
+                        placeholder="Tell us about your tutoring needs (optional)"
+                        rows={5}
+                        value={message}
+                        onChange={(e) => setMessage(e.target.value)}
+                    />
+
+                    <button type="submit">
+                        Send Message
+                    </button>
+
                 </form>
 
                <div className="social-links">
