@@ -23,6 +23,11 @@ export default function Home() {
     const [message, setMessage] = useState("");
     const [testPrepType, setTestPrepType] = useState("");
 
+    const token = localStorage.getItem("token");
+    const role = localStorage.getItem("role");
+    const isAdmin = token && role === "admin";
+    const [serviceIndex, setServiceIndex] = useState(0);
+
     const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -72,6 +77,83 @@ export default function Home() {
     }
 };
 
+    const uploadHomepageImage = async (e, section) => {
+        const file = e.target.files[0];
+
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append("file", file);
+
+        try {
+            const response = await fetch(
+                `http://localhost:8000/homepage/image/${section}`,
+                {
+                    method: "PUT",
+                    body: formData,
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error("Upload failed");
+            }
+
+            alert("Image uploaded!");
+
+            window.location.reload();
+        } catch (err) {
+            console.error(err);
+            alert("Image upload failed.");
+        }
+    };
+
+    const services = [
+        {
+            order: 2,
+            title: "Academic Tutoring",
+            items: [
+                "Personalized instruction tailored to each student",
+                "Strengthen reading, writing, and math skills",
+                "Homework assistance and test preparation",
+                "Build confidence and long-term academic success",
+            ],
+        },
+        {
+            order: 3,
+            title: "Test Preparation",
+            items: [
+                "SAT, ACT, and placement exam practice",
+                "Proven test-taking strategies",
+                "Practice exams and review sessions",
+                "Improve scores and confidence",
+            ],
+        },
+        {
+            order: 1,
+            title: "Afterschool Program",
+            items: [
+                "Homework assistance and daily tutoring",
+                "Safe and structured learning environment",
+                "Educational activities and enrichment",
+                "Support for academic growth and success",
+            ],
+        },
+        {
+            order: 4,
+            title: "Summer Camp",
+            items: [
+                "Academic tutoring built into every day",
+                "Educational activities, art, music, and games",
+                "Sports, games, art, and enrichment activities",
+                "Field trips and fun learning experiences all summer long",
+            ],
+        },
+    ];
+
+    const sortedServices = [...services].sort(
+        (a, b) => a.order - b.order
+    );
+
     return (
         <main className="home-page">
             <a href="#contact" className="floating-contact-btn">
@@ -87,58 +169,116 @@ export default function Home() {
                     <Link className="hero-services-btn" to="/services">
                         Learn About Our Services
                     </Link>
+                    <div className="scholarship-section">
+                        <p className="scholarship-title">
+                            We Proudly Accept
+                        </p>
+
+                        <div className="scholarship-logos">
+
+                            <img
+                                src="/elc.png"
+                                alt="Early Learning Coalition"
+                            />
+
+                            <img
+                                src="/stepup.png"
+                                alt="Step Up For Students"
+                            />
+
+                        </div>
+
+                        <p className="scholarship-text">
+                            ✓ Government Scholarships Accepted
+                        </p>
+
+                    </div>
                 </div>
             </section>
 
-            <section className="services-section">
-                <div className="service-card">
-                    <h3>Academic Tutoring</h3>
-                    <ul>
-                        <li>Personalized instruction tailored to each student</li>
-                        <li>Strengthen reading, writing, and math skills</li>
-                        <li>Homework assistance and test preparation</li>
-                        <li>Build confidence and long-term academic success</li>
-                    </ul>
-                    <Link to="/services">Learn More</Link>
-                </div>
+            <section className="services-wrapper">
+                {sortedServices.length > 4 && (
+                    <button
+                        className="services-arrow"
+                        onClick={() =>
+                            setServiceIndex((prev) => Math.max(prev - 1, 0))
+                        }
+                        disabled={serviceIndex === 0}
+                    >
+                        &#10094;
+                    </button>
+                )}
 
-                <div className="service-card">
-                    <h3>Test Preparation</h3>
-                    <ul>
-                        <li>SAT, ACT, and placement exam practice</li>
-                        <li>Proven test-taking strategies</li>
-                        <li>Practice exams and review sessions</li>
-                        <li>Improve scores and confidence</li>
-                    </ul>
-                    <Link to="/services">Learn More</Link>
-                </div>
+                <section className="services-section">
 
-                <div className="service-card">
-                    <h3>Afterschool Program</h3>
-                    <ul>
-                        <li>Homework assistance and daily tutoring</li>
-                        <li>Safe and structured learning environment</li>
-                        <li>Educational activities and enrichment</li>
-                        <li>Support for academic growth and success</li>
-                    </ul>
-                    <Link to="/services">Learn More</Link>
-                </div>
+                    {sortedServices
+                        .slice(serviceIndex, serviceIndex + 4)
+                        .map((service, index) => (
 
-                <div className="service-card">
-                    <h3>Summer Camp</h3>
-                    <ul>
-                        <li>Academic tutoring built into every day</li>
-                        <li>Educational activities, art, music, and games</li>
-                        <li>Sports, games, art, and enrichment activities</li>
-                        <li>Field trips and fun learning experiences all summer long</li>
-                    </ul>
-                    <Link to="/services">Learn More</Link>
-                </div>
+                            <div
+                                className="service-card"
+                                key={index}
+                            >
+                                <h3>{service.title}</h3>
+
+                                <ul>
+                                    {service.items.map((item, i) => (
+                                        <li key={i}>{item}</li>
+                                    ))}
+                                </ul>
+
+                                <Link to="/services">
+                                    Learn More
+                                </Link>
+                            </div>
+
+                        ))}
+
+                </section>
+
+                {sortedServices.length > 4 && (
+                    <button
+                        className="services-arrow"
+                        onClick={() =>
+                            setServiceIndex((prev) =>
+                                Math.min(prev + 1, sortedServices.length - 4)
+                            )
+                        }
+                        disabled={serviceIndex >= sortedServices.length - 4}
+                    >
+                        &#10095;
+                    </button>
+                )}
+
             </section>
 
             <section className="info-section">
                 <div className="info-card">
-                    <div className="info-image placeholder-one"></div>
+                    <div className="info-image">
+                        <img
+                            src={`http://localhost:8000/uploads/homepage/about.jpg?v=${Date.now()}`}
+                            alt="About Us"
+                        />
+                        {isAdmin && (
+                            <>
+                                <input
+                                    id="about-upload"
+                                    type="file"
+                                    hidden
+                                    accept="image/*"
+                                    onChange={(e) => uploadHomepageImage(e, "about")}
+                                />
+
+                                <label
+                                    htmlFor="about-upload"
+                                    className="homepage-upload-btn"
+                                >
+                                    +
+                                </label>
+                            </>
+                        )}
+                    </div>
+
                     <div className="info-content">
                         <h2>About Us</h2>
                         <p>
@@ -151,19 +291,69 @@ export default function Home() {
                 </div>
 
                 <div className="info-card">
-                    <div className="info-image placeholder-two"></div>
+                    <div className="info-image">
+                        <img
+                            src={`http://localhost:8000/uploads/homepage/what_we_do.jpg?v=${Date.now()}`}
+                            alt="About Us"
+                        />
+
+                        {isAdmin && (
+                            <>
+                                <input
+                                    id="what-we-do-upload"
+                                    type="file"
+                                    hidden
+                                    accept="image/*"
+                                    onChange={(e) => uploadHomepageImage(e, "what_we_do")}
+                                />
+
+                                <label
+                                    htmlFor="what-we-do-upload"
+                                    className="homepage-upload-btn"
+                                >
+                                    +
+                                </label>
+                            </>
+                        )}
+                    </div>
+
                     <div className="info-content">
                         <h2>What We Do</h2>
                         <p>
                             We work with students on practical solutions that fit
                             their schedules, reduce stress, and improve academic
                             performance through personalized tutoring sessions.
-                        </p>
+                        </p>`
                     </div>
                 </div>
 
                 <div className="info-card">
-                    <div className="info-image placeholder-three"></div>
+                    <div className="info-image">
+                        <img
+                            src={`http://localhost:8000/uploads/homepage/why_ez_tutoring.jpg?v=${Date.now()}`}
+                            alt="About Us"
+                        />
+
+                        {isAdmin && (
+                            <>
+                                <input
+                                    id="why-upload"
+                                    type="file"
+                                    hidden
+                                    accept="image/*"
+                                    onChange={(e) => uploadHomepageImage(e, "why")}
+                                />
+
+                                <label
+                                    htmlFor="why-upload"
+                                    className="homepage-upload-btn"
+                                >
+                                    +
+                                </label>
+                            </>
+                        )}
+                    </div>
+
                     <div className="info-content">
                         <h2>Why EZ Tutoring</h2>
                         <p>

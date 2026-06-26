@@ -9,13 +9,23 @@ export default function Navbar(){
     return(
         <nav className="navbar">
             <div className="logo">
-                <img src={logo}
-                     alt="EZ Tutoring"
-                     className="main-logo" />
+                <img
+                    src={logo}
+                    alt="EZ Tutoring"
+                    className="main-logo"
+                />
 
                 <div className="logo-text">
                     <h1>EZ Tutoring</h1>
-                    <p>Helping Students Succeed</p>
+                    <p className="logo-slogan">
+                        Helping Students Succeed
+                    </p>
+                </div>
+
+                <div className="logo-contact">
+                    <span>(786) 355-2862</span>
+                    <span>62 W 49th St</span>
+                    <span>Hialeah, FL</span>
                 </div>
             </div>
 

@@ -30,7 +30,7 @@ export default function Login() {
             );
 
             const data = await response.json();
-            console.log(data);
+            console.log("LOGIN RESPONSE:", data);
 
             if(!response.ok){
                 alert("Invalid email or password");
@@ -40,6 +40,11 @@ export default function Login() {
             localStorage.setItem(
                 "token",
                 data.access_token
+            );
+
+            localStorage.setItem(
+                "role",
+                data.role
             );
 
             if (location.state?.redirectTo) {

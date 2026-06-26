@@ -129,7 +129,7 @@ body {
 
 .services-section {
   max-width: 1180px;
-  margin: -95px auto 80px;
+  margin: -150px auto 80px;
   padding: 0 25px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -420,3 +420,111 @@ body {
 .social-links svg {
     font-size: 2rem;
 }
+
+.services-wrapper {
+    position: relative;
+
+    max-width: 1320px;
+    margin: -95px auto 80px;
+
+    padding: 0;
+}
+
+.services-section {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+}
+
+
+.services-arrow {
+    position: absolute;
+
+    top: 235px;          /* vertically centered on the cards */
+
+    width: 42px;
+    height: 42px;
+
+    border: none;
+    border-radius: 50%;
+
+    background: rgba(244,197,66,.95);
+    color: #0B1F4D;
+
+    font-size: 28px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    z-index: 50;
+
+    transition: .2s;
+}
+
+.services-arrow:first-of-type {
+    left: -20px;
+}
+
+.services-arrow:last-of-type {
+    right: -20px;
+}
+
+.services-arrow:hover:not(:disabled) {
+    transform: scale(1.08);
+}
+
+.services-arrow:disabled {
+    opacity: .35;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    color: white;
+    margin-right: 80px;
+}
+
+.logo img {
+    height: 90px;
+}
+
+.logo-text {
+    display: flex;
+    flex-direction: column;
+    font-family: "Comic Sans MS", "Comic Sans", cursive;
+}
+
+.logo-text h1 {
+    margin: 0;
+    font-family: "Comic Sans MS", "Comic Sans", cursive;
+    font-size: 2rem;
+    color: white;
+    line-height: 1;
+}
+
+.logo-slogan {
+    margin: 6px 0 0 0;
+    color: white;
+    font-size: .95rem;
+   font-family: "Comic Sans MS", "Comic Sans", cursive;
+
+}
+
+.logo-contact {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: 20px;
+    font-family: "Comic Sans MS", "Comic Sans", cursive;
+    font-weight: 400;
+    line-height: 1.5;
+
+}
+
+.logo-contact span {
+    color: white;
+    font-size: 1rem;
+}
+
+
