@@ -1,5 +1,4 @@
 from psycopg2.extras import RealDictCursor
-from psycopg2.errors import UniqueViolation
 from app.db.db_connection import get_connection
 from app.models.tutor_profile import Tutor
 
@@ -8,86 +7,59 @@ def create_tutor(tutor:Tutor):
     cursor = conn.cursor(cursor_factory=RealDictCursor)
 
     query = """
-            INSERT INTO tutors(user_id, tutor_bio, experience)
-            VALUES(%s, %s, %s)
+            INSERT INTO tutors(first_name, last_name, tutor_bio, experience)
+            VALUES(%s, %s, %s, %s)
             RETURNING *
             """
 
-    values = (tutor.user_id,
+    values = (
+              tutor.first_name,
+              tutor.last_name,
               tutor.tutor_bio,
               tutor.experience)
-    try:
-        cursor.execute(query, values)
-        created = cursor.fetchone()
 
-        cursor.execute("""
-                       UPDATE users
-                       SET role = 'tutor'
-                       WHERE user_id = %s
-                       """, (tutor.user_id,))
+    cursor.execute(query, values)
+    created = cursor.fetchone()
 
-        cursor.execute("""
-                       SELECT tutors.tutor_id,
-                              users.first_name,
-                              users.last_name,
-                              users.email,
-                              tutors.tutor_bio,
-                              tutors.experience
-                       FROM tutors
-                                JOIN users ON tutors.user_id = users.user_id
-                       WHERE tutors.tutor_id = %s
-                       """, (created["tutor_id"],))
-
-        created = cursor.fetchone()
-        conn.commit()
-
-    except UniqueViolation:
-        conn.rollback()
-        cursor.close()
-        conn.close()
-        return None
-
+    conn.commit()
     cursor.close()
     conn.close()
 
     return created
 
-def update_tutor(tutor:Tutor):
+def update_tutor(tutor: Tutor):
     conn = get_connection()
     cursor = conn.cursor(cursor_factory=RealDictCursor)
 
     query = """
-            UPDATE tutors
-            SET tutor_bio = %s, experience = %s
-            WHERE tutor_id = %s
-            RETURNING *
-            """
+        UPDATE tutors
+        SET
+            first_name = %s,
+            last_name = %s,
+            tutor_bio = %s,
+            experience = %s
+        WHERE tutor_id = %s
+        RETURNING *
+    """
 
-    values = (tutor.tutor_bio, tutor.experience, tutor.tutor_id)
+    values = (
+        tutor.first_name,
+        tutor.last_name,
+        tutor.tutor_bio,
+        tutor.experience,
+        tutor.tutor_id
+    )
+
     cursor.execute(query, values)
 
     updated = cursor.fetchone()
 
-    cursor.execute("""
-                   SELECT
-                   tutors.tutor_id,
-                   users.first_name,
-                   users.last_name,
-                   users.email,
-                   tutors.tutor_bio,
-                   tutors.experience
-                   FROM tutors
-                   JOIN users ON tutors.user_id = users.user_id
-                   WHERE tutors.tutor_id = %s
-                    """, (updated["tutor_id"],))
-    updated = cursor.fetchone()
     conn.commit()
 
     cursor.close()
     conn.close()
 
     return updated
-
 
 def delete_tutor(tutor_id:int):
     conn = get_connection()
@@ -103,14 +75,6 @@ def delete_tutor(tutor_id:int):
     cursor.execute(query, values)
 
     deleted = cursor.fetchone()
-
-    if deleted:
-        cursor.execute("""
-        UPDATE users
-        SET role = 'client'
-        WHERE user_id = %s
-            """, (deleted['user_id'],))
-
     conn.commit()
 
     cursor.close()
@@ -125,16 +89,12 @@ def display_tutors():
     query = """
             SELECT
                 tutors.tutor_id,
-                users.user_id,
-                users.first_name,
-                users.last_name,
-                users.email,
+                tutors.first_name,
+                tutors.last_name,
                 tutors.tutor_bio,
                 tutors.experience,
                 tutors.profile_image
             FROM tutors
-            JOIN users ON tutors.user_id = users.user_id
-            WHERE users.role = 'tutor'
             """
     cursor.execute(query)
     tutors = cursor.fetchall()
@@ -143,32 +103,6 @@ def display_tutors():
     conn.close()
 
     return tutors
-
-def get_tutor_by_email(email: str):
-    conn = get_connection()
-    cursor = conn.cursor(cursor_factory=RealDictCursor)
-
-    query = """
-            SELECT
-            users.first_name,
-            users.last_name,
-            users.email,
-            tutors.tutor_bio,
-            tutors.experience
-            FROM tutors
-            JOIN users ON tutors.user_id = users.user_id
-            WHERE email = %s
-            """
-
-    values = (email,)
-    cursor.execute(query, values)
-
-    tutor = cursor.fetchone()
-
-    cursor.close()
-    conn.close()
-
-    return tutor
 
 def upload_tutor_profile_photo(tutor_id:int, profile_image: str):
     conn = get_connection()

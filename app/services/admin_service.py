@@ -1,9 +1,7 @@
-from app.models.subjects import Subject
 from app.models.tutor_profile import Tutor
 from app.models.user import User
 from app.services.user_service import create_new_user, delete_user_profile
 from app.services.tutor_service import create_tutor_profile, delete_tutor_profile
-from app.services.subjects_service import create_new_subject as create_subject_service, delete_subject_record
 from app.services.user_service import display_all_users
 
 def create_tutor_account(tutor: Tutor):
@@ -19,22 +17,6 @@ def delete_tutor_account(tutor_id: int):
 
     if not deleted:
         raise ValueError("Tutor does not exist")
-
-    return deleted
-
-def create_new_subject(subject: Subject):
-    created = create_subject_service(subject)
-
-    if not created:
-        raise ValueError("Subject already exists")
-
-    return created
-
-def delete_new_subject(subject_id: int):
-    deleted = delete_subject_record(subject_id)
-
-    if not deleted:
-        raise ValueError("Subject does not exist")
 
     return deleted
 

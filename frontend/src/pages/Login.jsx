@@ -1,8 +1,6 @@
 import "./Login.css";
 import {useState} from "react";
-import {Link} from "react-router-dom";
 import { useNavigate, useLocation } from "react-router-dom";
-import {getCurrentUser} from "../utils/auth.js";
 
 export default function Login() {
     const [email,setEmail] =useState("");
@@ -20,7 +18,7 @@ export default function Login() {
 
             console.log(formData.toString());
             const response = await  fetch(
-                "http://127.0.0.1:8000/auth/login",
+                "https://eztutoring.onrender.com/auth/login",
                 {
                     method: "POST",
                     headers: {
@@ -44,15 +42,11 @@ export default function Login() {
                 data.access_token
             );
 
-            const currentUser = getCurrentUser();
             if (location.state?.redirectTo) {
                 navigate(location.state.redirectTo)
             }
-            else if(currentUser.role === "tutor") {
-                navigate("/tutor-dashboard");
-            }
             else{
-                navigate("/")
+                navigate("/admin-dashboard")
             }
 
 
@@ -96,18 +90,6 @@ export default function Login() {
                 >
                     Login
                 </button>
-
-                <button type="button"
-                    className="forgot-password">
-                    Forgot Password?
-                </button>
-                <div className="register-section">
-                    <span>Don't have an account?</span>
-
-                    <Link to="/register" className="register-link">
-                        Register Now
-                    </Link>
-                </div>
             </div>
         </main>
     );

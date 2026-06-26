@@ -1,5 +1,5 @@
 from app.models.tutor_profile import Tutor
-from app.dao.tutor_dao import create_tutor, update_tutor, delete_tutor, display_tutors, get_tutor_by_email, upload_tutor_profile_photo
+from app.dao.tutor_dao import create_tutor, update_tutor, delete_tutor, display_tutors, upload_tutor_profile_photo
 
 TUTOR_BIO_MAX_LENGTH = 250
 
@@ -48,20 +48,8 @@ def delete_tutor_profile(tutor_id: int):
     return {"success": True}
 
 def display_tutor_profiles():
-    tutors = display_tutors()
+    return display_tutors()
 
-    if not tutors:
-        raise ValueError("Tutor not found")
-
-    return tutors
-
-def search_tutor_by_email(email: str):
-    user = get_tutor_by_email(email)
-
-    if not user:
-        raise ValueError("No users found")
-
-    return user
 
 def upload_picture(tutor: Tutor):
     upload = upload_tutor_profile_photo(tutor.tutor_id, tutor.profile_image)

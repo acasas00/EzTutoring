@@ -8,15 +8,14 @@ def create_user(user: User):
     cursor = conn.cursor(cursor_factory=RealDictCursor)
 
     query = """
-        INSERT INTO users (first_name, last_name, phone_number, email, password_hash,role)
-        VALUES (%s, %s, %s, %s, %s, %s)
+        INSERT INTO users (first_name, last_name, email, password_hash,role)
+        VALUES (%s, %s, %s, %s, %s)
         RETURNING *
     """
 
     values = (
         user.first_name,
         user.last_name,
-        user.phone_number,
         user.email,
         user.password_hash,
         user.role
@@ -37,7 +36,7 @@ def update_user(user: User, user_id: int):
 
     query = """
         UPDATE users
-        SET first_name=%s, last_name=%s, phone_number=%s, email=%s
+        SET first_name=%s, last_name=%s, email=%s
         WHERE user_id = %s
         RETURNING *
         """
@@ -45,7 +44,6 @@ def update_user(user: User, user_id: int):
     values = (
         user.first_name,
         user.last_name,
-        user.phone_number,
         user.email,
         user_id
     )
@@ -61,7 +59,7 @@ def update_user(user: User, user_id: int):
 def delete_user(user_id: int):
 
     conn = get_connection()
-    cursor = conn.cursor()
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
 
     query = """
         DELETE FROM users
@@ -77,37 +75,6 @@ def delete_user(user_id: int):
     cursor.close()
     conn.close()
     return deleted
-
-def search_user(search_term: str):
-    conn = get_connection()
-    cursor = conn.cursor(cursor_factory=RealDictCursor)
-
-    like_term = f"%{search_term}%"
-
-    query = """
-        SELECT
-        users.user_id,
-        users.first_name,
-        users.last_name,
-        users.phone_number,
-        users.email,
-        users.role
-        FROM users
-        WHERE email ILIKE %s
-        OR phone_number ILIKE %s
-        OR first_name ILIKE %s
-        OR last_name ILIKE %s
-        """
-
-    values = (like_term, like_term,like_term,like_term)
-    cursor.execute(query, values)
-
-    user = cursor.fetchall()
-
-    cursor.close()
-    conn.close()
-
-    return user
 
 def get_user_by_email(email: str):
     conn = get_connection()
@@ -139,7 +106,6 @@ def get_all_users():
             users.user_id,
             users.first_name,
             users.last_name,
-            users.phone_number,
             users.email,
             users.role
             FROM users

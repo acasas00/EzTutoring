@@ -2,13 +2,16 @@ from typing import Optional
 from pydantic import BaseModel, EmailStr
 
 class TutorCreate(BaseModel):
-    user_id: int
+    first_name: str
+    last_name: str
     tutor_bio: str
     experience: int
-    profile_image: str
+    profile_image: Optional[str] = None
 
 class TutorUpdate(BaseModel):
     tutor_id: int
+    first_name: str
+    last_name: str
     tutor_bio: str
     experience: int
 
@@ -21,7 +24,6 @@ class TutorResponse(BaseModel):
     tutor_id: int
     first_name: str
     last_name: str
-    email: EmailStr
     tutor_bio: str
     experience: int
     profile_image: Optional[str] = None

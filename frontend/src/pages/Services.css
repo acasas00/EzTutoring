@@ -1,0 +1,127 @@
+.services-page {
+    min-height: 100vh;
+
+    padding: 50px;
+
+    background:
+        radial-gradient(
+            circle at center,
+            #183b70 0%,
+            #0B1F4D 65%
+        );
+
+    color: white;
+}
+
+.services-hero {
+    text-align: center;
+
+    max-width: 900px;
+
+    margin: 0 auto 60px auto;
+}
+
+.services-hero h1 {
+    font-size: 3rem;
+
+    margin-bottom: 20px;
+}
+
+.services-hero p {
+    font-size: 1.15rem;
+
+    line-height: 1.7;
+
+    opacity: .9;
+}
+
+.services-grid {
+    max-width: 1300px;
+
+    margin: 0 auto 60px auto;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fit, minmax(280px, 1fr));
+
+    gap: 25px;
+}
+
+.service-card {
+    background: #202424;
+
+    border: 2px solid #F4C542;
+
+    border-radius: 15px;
+
+    padding: 25px;
+
+    box-shadow:
+        0 0 12px rgba(244,197,66,.25),
+        0 6px 14px rgba(0,0,0,.25);
+}
+
+.service-card h2 {
+    color: #F4C542;
+
+    margin-bottom: 15px;
+}
+
+.service-card p {
+    margin-bottom: 15px;
+
+    line-height: 1.6;
+}
+
+.service-card ul {
+    padding-left: 20px;
+
+    line-height: 1.8;
+}
+
+.services-info {
+    max-width: 1000px;
+
+    margin: 0 auto;
+}
+
+.service-detail-card {
+    background: #202424;
+
+    border: 2px solid #F4C542;
+
+    border-radius: 15px;
+
+    padding: 35px;
+
+    box-shadow:
+        0 0 12px rgba(244,197,66,.25),
+        0 6px 14px rgba(0,0,0,.25);
+}
+
+.service-detail-card h2 {
+    color: #F4C542;
+
+    margin-bottom: 20px;
+
+    text-align: center;
+}
+
+.service-detail-card p {
+    line-height: 1.8;
+
+    margin-bottom: 15px;
+}
+
+@media (max-width: 768px) {
+
+    .services-page {
+        padding: 25px;
+    }
+
+    .services-hero h1 {
+        font-size: 2.2rem;
+    }
+
+}

@@ -1,42 +1,27 @@
 import "./AdminDashboard.css";
-import {useState, useEffect, use} from "react";
+import {useState, useEffect} from "react";
 
 export default function AdminDashboard() {
 
-    const [activeTab, setActiveTab] = useState("overview");
     const [users, setUsers] = useState([]);
     const [tutors, setTutors] = useState([]);
-    const [subjects, setSubjects] = useState([]);
-    const [newSubject, setNewSubject] = useState("");
-    const [bookings, setBookings] = useState([]);
-    const [newTutorEmail, setNewTutorEmail] = useState("");
-    const [newTutorBio, setNewTutorBio] = useState("");
-    const [newTutorExperience, setNewTutorExperience] = useState("");
-    const [showHistoryModal, setShowHistoryModal] = useState(false);
-    const [selectedUserBookings, setSelectedUserBookings] = useState([]);
-    const [selectedUserName, setSelectedUserName] = useState("")
     const [userSearch, setUserSearch] = useState("");
+    const [messages, setMessages] = useState([]);
+    const [messageSearch, setMessageSearch] = useState("");
+    const [selectedMessage, setSelectedMessage] = useState(null);
     const [tutorSearch, setTutorSearch] = useState("");
-
-   const pendingBookings = Array.isArray(bookings)
-    ? bookings.filter(
-        booking => booking.status === "pending"
-      )
-    : [];
-    const acceptedBookings = Array.isArray(bookings)
-    ? bookings.filter(
-        booking => booking.status === "accepted"
-      )
-    : [];
-
-    const [currentMonth, setCurrentMonth] =  useState(new Date());
-    const [selectedDate, setSelectedDate] = useState(new Date());
+    const [activeTab, setActiveTab] = useState("tutors");
+    const [editingTutor, setEditingTutor] = useState(null);
+    const [creatingTutor, setCreatingTutor] = useState(null);
+    const [mailFilter, setMailFilter] = useState("new");
+    const [sortOrder, setSortOrder] = useState("newest");
+    const [selectedMessages, setSelectedMessages] = useState([]);
 
     useEffect(() => {
 
     const token = localStorage.getItem("token");
 
-    fetch("http://127.0.0.1:8000/admin/users",
+    fetch("https://eztutoring.onrender.com/admin/users",
     {
         headers: {
             Authorization: `Bearer ${token}`
@@ -51,27 +36,15 @@ export default function AdminDashboard() {
     .then(data => {if(data){setUsers(data);}})
     .catch(error => console.error(error));
 
-    fetch("http://127.0.0.1:8000/tutors/")
+    fetch("https://eztutoring.onrender.com/tutors/")
         .then(response => response.json())
         .then(data => setTutors(data))
         .catch(error => console.error(error));
 
-    fetch("http://127.0.0.1:8000/subjects/list")
+    fetch("https://eztutoring.onrender.com/contact-messages/search/all")
         .then(response => response.json())
-        .then(data => setSubjects(data))
+        .then(data => setMessages(data))
         .catch(error => console.error(error));
-
-    fetch("http://127.0.0.1:8000/admin/bookings",{
-        headers: {Authorization: `Bearer ${token}`}})
-    .then(async response => {
-        if(response.status === 401){
-            localStorage.removeItem("token");
-            window.location.href = "/login";
-            return;
-        }
-        return response.json();})
-    .then(data => {if(data){setBookings(data);}})
-    .catch(error => console.error(error));
 
 }, []);
 
@@ -85,7 +58,7 @@ export default function AdminDashboard() {
 
         try {
             const response = await fetch(
-                 `http://127.0.0.1:8000/users/${userId}`,
+                 `https://eztutoring.onrender.com/users/${userId}`,
                 {
                     method: "DELETE",
                     headers: {
@@ -109,190 +82,6 @@ export default function AdminDashboard() {
         }
     }
 
-    const handleCreateSubject = async () => {
-        const token = localStorage.getItem("token");
-
-        if (!newSubject.trim()) {
-            alert("Enter Subject Name");
-            return;
-        }
-
-        try{
-            const response = await fetch(
-                "http://127.0.0.1:8000/admin/subjects",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type" : "application/json",
-                        Authorization: `Bearer ${token}`
-                    },
-                    body: JSON.stringify(
-                        {subject_name: newSubject}
-                    )
-                }
-            );
-
-            if (!response.ok) {
-                throw new Error("Subject not created")
-            }
-
-            const createdSubject = await response.json();
-
-            setSubjects([
-                ...subjects,
-                createdSubject
-            ]);
-
-            setNewSubject("");
-        } catch( error){
-            console.error(error);
-            alert("Unable to create subject");
-        }
-    }
-
-    const handleDeleteSubject = async (subjectId) => {
-        const token = localStorage.getItem("token");
-
-        if (!window.confirm("Delete Subject?")){
-            return;
-        }
-
-        try{
-             const response = await fetch(
-                 `http://127.0.0.1:8000/admin/subjects/${subjectId}`,
-                 {
-                     method: "DELETE",
-                     headers: {
-                         Authorization: `Bearer ${token}`
-                     }
-                 }
-             );
-
-             if (!response.ok){
-                 throw new Error("Delete failed");
-             }
-
-             setSubjects(
-                 subjects.filter(
-                     subject => subject.subject_id !== subjectId
-                 )
-             );
-        } catch (error) {
-            console.log(error);
-            alert("Unable to delete subject");
-        }
-    }
-
-    const handleViewUserBookings = async (user) =>{
-        try{
-            const response = await fetch(`http://127.0.0.1:8000/bookings/tutor_bookings/${user.user_id}`);
-            if (!response.ok){
-                throw new Error("Failed to display bookings");
-            }
-
-            const data = await response.json();
-            setSelectedUserBookings(data);
-            setSelectedUserName(`${user.first_name} ${user.last_name}`);
-            setShowHistoryModal(true);
-
-        }catch(error){
-            console.error(error);
-            alert("Booking history not loaded");
-        }
-    }
-
-    const clients = Array.isArray(users)
-    ? users.filter(user => user.role === "client")
-    : [];
-
-    const tutorsCheck = Array.isArray(users)
-    ? users.filter(user => user.role === "tutor")
-    : [];
-
-    const adminCheck = Array.isArray(users)
-    ? users.filter(user => user.role === "admin")
-    : [];
-
-    const previousMonth = () => {
-        setCurrentMonth(
-            new Date(
-                currentMonth.getFullYear(),
-                currentMonth.getMonth()-1,
-                1
-            )
-        )
-    };
-
-    const nextMonth = () => {
-        setCurrentMonth(
-            new Date(
-                currentMonth.getFullYear(),
-                currentMonth.getMonth() +1,
-                1
-            )
-        )
-    };
-
-    const firstDay = new Date(
-        currentMonth.getFullYear(),
-        currentMonth.getMonth(),
-        1
-    );
-
-    const lastDay = new Date(
-        currentMonth.getFullYear(),
-        currentMonth.getMonth() +1,
-        0
-    );
-
-    const daysInMonth = lastDay.getDate();
-    const calendarDays = [];
-    const startingDay = firstDay.getDay();
-
-    for(let i =0; i < startingDay; i++){
-        calendarDays.push(null)
-    }
-
-    for(let day =1; day<= daysInMonth; day++){
-        calendarDays.push(
-            new Date(currentMonth.getFullYear(), currentMonth. getMonth(), day)
-        );
-    }
-
-    const selectedBookings = Array.isArray(bookings)
-    ? bookings.filter(
-        booking =>
-            new Date(booking.start_time).toDateString() ===
-            selectedDate.toDateString()
-      )
-    : [];
-
-    const handleBookingStatus = async(
-        bookingId, status) => {
-        const token = localStorage.getItem("token");
-        try {
-            const response = await fetch(`http://127.0.0.1:8000/bookings/${bookingId}/status?status=${status}`,
-                {
-                    method: "PUT",
-                    headers: {Authorization: `Bearer ${token}`}
-                });
-
-            if (!response.ok) {
-                throw new Error("Failed status update")
-            }
-
-            setBookings(
-                bookings.map((booking) =>
-                    booking.booking_id === bookingId ? {
-                        ...booking, status: status
-                    } : booking)
-            );
-        } catch (error) {
-            console.error(error);
-            alert("Unable to update booking");
-        }
-    }
-
     const filteredTutors = tutors.filter((tutor) =>
     `${tutor.first_name} ${tutor.last_name}`
         .toLowerCase()
@@ -311,7 +100,7 @@ export default function AdminDashboard() {
         if(!window.confirm("Delete Tutor?")){return}
 
         try{
-            const response = await fetch(`http://127.0.0.1:8000/admin/tutors/${tutorId}`,
+            const response = await fetch(`https://eztutoring.onrender.com/admin/tutors/${tutorId}`,
                 {
                     method: "DELETE",
                     headers: {
@@ -329,26 +118,176 @@ export default function AdminDashboard() {
             alert("Cannot delete tutor");
         }}
 
+    const handleUpdateTutor = async () => {
+
+    try {
+
+        const response = await fetch(
+            "https://eztutoring.onrender.com/tutors/",
+            {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(editingTutor)
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error("Update failed");
+        }
+
+        const updatedTutor = await response.json();
+
+        setTutors(
+            tutors.map((tutor) =>
+                tutor.tutor_id === updatedTutor.tutor_id
+                    ? updatedTutor
+                    : tutor
+            )
+        );
+
+        setEditingTutor(null);
+
+    } catch (error) {
+        console.error(error);
+        alert("Unable to update tutor");
+    }
+};
+
+    const handleCreateTutor = async () => {
+
+    try {
+
+        const token = localStorage.getItem("token");
+
+        const response = await fetch(
+            "https://eztutoring.onrender.com/admin/tutors",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify(creatingTutor)
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error("Create failed");
+        }
+
+        const newTutor = await response.json();
+
+        setTutors([...tutors, newTutor]);
+
+        setCreatingTutor(null);
+
+    } catch (error) {
+        console.error(error);
+        alert("Unable to create tutor");
+    }
+};
+
+    const handleViewMessage = async (message) => {
+
+    setSelectedMessage(message);
+
+    try {
+        await fetch(
+            `https://eztutoring.onrender.com/contact-messages/${message.message_id}/is-read`,
+            {
+                method: "PUT"
+            }
+        );
+
+        setMessages(
+            messages.map((m) =>
+                m.message_id === message.message_id
+                    ? { ...m, is_read: true }
+                    : m
+            )
+        );
+
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+    const filteredMessages = messages
+    .filter((message) => {
+
+        const matchesSearch =
+            `${message.full_name} ${message.email} ${message.message}`
+                .toLowerCase()
+                .includes(messageSearch.toLowerCase());
+
+        if (!matchesSearch) {
+            return false;
+        }
+
+        if (mailFilter === "inbox") {
+            return true;
+        }
+
+        if (mailFilter === "unread") {
+            return !message.is_read;
+        }
+
+        if (mailFilter === "read") {
+            return message.is_read;
+        }
+
+        return message.status === mailFilter;
+    })
+    .sort((a, b) => {
+
+        if (sortOrder === "oldest") {
+            return new Date(a.created_at) - new Date(b.created_at);
+        }
+
+        return new Date(b.created_at) - new Date(a.created_at);
+    });
+
+    const handleBulkDelete = async () => {
+    if (!window.confirm(`Delete ${selectedMessages.length} message(s)?`)) {
+        return;
+    }
+
+    try {
+        await Promise.all(
+            selectedMessages.map((messageId) =>
+                fetch(
+                    `https://eztutoring.onrender.com/contact-messages/${messageId}`,
+                    {
+                        method: "DELETE"
+                    }
+                )
+            )
+        );
+
+        setMessages(
+            messages.filter(
+                (message) =>
+                    !selectedMessages.includes(message.message_id)
+            )
+        );
+
+        setSelectedMessages([]);
+        setSelectedMessage(null);
+
+    } catch (error) {
+        console.error(error);
+        alert("Unable to delete selected messages");
+    }
+};
+
     return (
         <main className="dashboard-page">
 
             <h1>Admin Dashboard</h1>
 
             <nav className="admin-nav">
-
-                <button
-                    className={activeTab === "overview" ? "active-tab" : ""}
-                    onClick={() => setActiveTab("overview")}
-                >
-                    Overview
-                </button>
-
-                <button
-                    className={activeTab === "bookings" ? "active-tab" : ""}
-                    onClick={() => setActiveTab("bookings")}
-                >
-                    Bookings
-                </button>
 
                 <button
                     className={activeTab === "tutors" ? "active-tab" : ""}
@@ -358,222 +297,20 @@ export default function AdminDashboard() {
                 </button>
 
                 <button
-                    className={activeTab === "subjects" ? "active-tab" : ""}
-                    onClick={() => setActiveTab("subjects")}
-                >
-                    Subjects
-                </button>
-
-                <button
                     className={activeTab === "users" ? "active-tab" : ""}
                     onClick={() => setActiveTab("users")}
                 >
                     Users
                 </button>
 
+                <button
+                    className={activeTab === "inbox" ? "active-tab" : ""}
+                    onClick={() => setActiveTab("inbox")}
+                    >
+                    Inbox
+                </button>
+
             </nav>
-
-            {activeTab === "overview" && (
-                <section className="dashboard-grid">
-
-                    <div className="dashboard-card">
-                        <h2>Total Users</h2>
-                        <p className="stat-number">
-                            {clients.length}
-                        </p>
-                    </div>
-
-                    <div className ="dashboard-card">
-                        <h2> Total Tutors</h2>
-                        <p className="stat-number">
-                            {tutorsCheck.length}
-                        </p>
-                    </div>
-
-                    <div className="dashboard-card">
-                        <h2>Total Admins</h2>
-                        <p className="stat-number">
-                            {adminCheck.length}
-                        </p>
-                    </div>
-
-                    <div className="dashboard-card">
-                        <h2>Total Subjects</h2>
-                        <p className="stat-number">
-                            {subjects.length}
-                        </p>
-                    </div>
-                </section>
-            )}
-
-            {activeTab === "bookings" && (
-                <section className="calendar-layout">
-                    <div className="booking-sidebar">
-                        <h2>
-                            {selectedDate.toLocaleDateString()}
-                        </h2>
-
-                        {selectedBookings.length === 0 ? (
-                            <p>No bookings.</p>
-                        ) : (
-                            selectedBookings.map((booking) => (
-                                <div key={booking.booking_id} className="dashboard-card">
-                                    <h3>
-                                        {booking.client_first_name}
-                                        {" "}
-                                        {booking.client_last_name}
-                                    </h3>
-
-                                    <p>
-                                        Subject: {booking.subject_name}
-                                    </p>
-
-                                    <p>
-                                        Tutor: {booking.tutor_first_name}
-                                        {" "}
-                                        {booking.tutor_last_name}
-                                    </p>
-
-                                    <p>
-                                        Status: {booking.status}
-                                    </p>
-
-                                    <p>
-                                        {new Date(
-                                            booking.start_time
-                                        ).toLocaleTimeString()}
-                                    </p>
-
-                                    <p>
-                                        Notes: {booking.notes}
-                                    </p>
-
-                                    {booking.status === "pending" ? (
-                                        <span className="status-badge pending">
-                                            Pending
-                                        </span>
-                                    ) : booking.status === "confirmed" ? (
-                                        <span className="status-badge accepted">
-                                            Confirmed
-                                        </span>
-                                    ) : (
-                                        <span className="status-badge rejected">
-                                            Rejected
-                                        </span>
-                                    )}
-
-                                    {booking.status === "pending" && (
-                                    <div className="booking-actions">
-                                        <button className="approve-btn"
-                                        onClick={() =>
-                                            handleBookingStatus(booking.booking_id, "confirmed")}>
-                                            Approve
-                                        </button>
-                                        <button className="reject-btn"
-                                        onClick={() =>
-                                            handleBookingStatus(booking.booking_id, "rejected")}>
-                                            Reject
-                                        </button>
-                                    </div>
-                                        )}
-                                </div>
-
-                            ))
-                        )}
-
-                    </div>
-                    <div className="calendar-panel">
-                        <div className="calendar-header">
-                            <button onClick={previousMonth}>
-                                ←
-                            </button>
-
-                            <h2>
-                                {currentMonth.toLocaleString(
-                                    "default",
-                                    {
-                                        month: "long",
-                                        year: "numeric"
-                                    }
-                                )}
-                            </h2>
-
-                            <button onClick={nextMonth}>
-                                →
-                            </button>
-
-                        </div>
-
-                        <div className="calendar-grid">
-                            <>
-                                <div className="calendar-weekday">Sun</div>
-                                <div className="calendar-weekday">Mon</div>
-                                <div className="calendar-weekday">Tue</div>
-                                <div className="calendar-weekday">Wed</div>
-                                <div className="calendar-weekday">Thu</div>
-                                <div className="calendar-weekday">Fri</div>
-                                <div className="calendar-weekday">Sat</div>
-                            </>
-                            {calendarDays.map((day, index) => {
-                                if(!day){
-                                    return(
-                                        <div key={index}
-                                             className="calendar-empty"/>
-                                    );
-                                }
-
-                                const dayBookings = bookings.filter(
-                                    booking =>
-                                        new Date(booking.start_time).toDateString() === day.toDateString()
-                                );
-
-                                const pendingCount = dayBookings.filter(
-                                    booking => booking.status === "pending"
-                                ).length;
-
-                                const confirmedCount = dayBookings.filter(
-                                    booking => booking.status === "confirmed"
-                                ).length;
-
-                                const isPast =
-                                    day < new Date(
-                                        new Date().setHours(0,0,0,0)
-                                    );
-
-                                let dayClass = "calendar-day";
-
-                                if(isPast){
-                                    dayClass += " past-day";
-                                }
-                                else if(pendingCount >0){
-                                    dayClass += " pending-day";
-                                }
-                                else if(confirmedCount > 0){
-                                    dayClass +=" accepted-day";
-                                }
-
-
-                                return (
-                                    <div
-                                        key={day.toISOString()}
-                                        className={dayClass}
-                                        onClick={() => setSelectedDate(day)}
-                                    >
-                                        <div className="calendar-date">
-                                            {day.getDate()}
-                                        </div>
-                                        {dayBookings.length > 0 && (
-                                            <div className="booking-indicator">
-                                                {dayBookings.length}
-                                            </div>
-                                        )}
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    </div>
-                </section>
-            )}
 
             {activeTab === "tutors" && (
                 <>
@@ -585,71 +322,56 @@ export default function AdminDashboard() {
                             value={tutorSearch}
                             onChange={(e) =>
                                 setTutorSearch(e.target.value)
-                            }/></div>
+                            }/>
+
+                        <button
+                            className="create-tutor-btn"
+                            onClick={() =>
+                                setCreatingTutor({
+                                    first_name: "",
+                                    last_name: "",
+                                    tutor_bio: "",
+                                    experience: 0
+                                })
+                            }
+                        >
+                            + Create Tutor
+                        </button>
+                    </div>
 
                     <section className="tutors-grid">
                         {filteredTutors.map((tutor) => (
                             <div key={tutor.tutor_id} className="dashboard-card">
+                                <img
+                                    className="admin-tutor-image"
+                                    src={
+                                        tutor.profile_image
+                                            ? `https://eztutoring.onrender.com${tutor.profile_image}`
+                                            : "/default-profile.png"
+                                    }
+                                    alt={`${tutor.first_name} ${tutor.last_name}`}
+                                />
+
                                 <h2>{tutor.first_name} {tutor.last_name}</h2>
-                                <p><strong>Email:</strong> {tutor.email}</p>
-                                <p><strong>Experience:</strong> {tutor.experience}</p>
+
+                                <p><strong>Experience:</strong> {tutor.experience} Years</p>
                                 <p>{tutor.tutor_bio}</p>
 
                                 <button
-                                    className="admin-delete-btn" onClick={() => handleDeleteTutor(tutor.tutor_id)}
-                                >
-                                    Delete Tutor
-                                </button>
+                                    className="admin-action-btn"
+                                    onClick={() => setEditingTutor(tutor)}
+                                >Edit Tutor</button>
+
                                 <button
-                                    className="view-availability-btn" onClick={() => handleViewAvailability(tutor)}
-                                    >
-                                    View Availability
-                                </button>
+                                    className="admin-delete-btn"
+                                    onClick={() => handleDeleteTutor(tutor.tutor_id)}
+                                > Delete Tutor</button>
+
                             </div>
                         ))}
                     </section>
                 </>
             )}
-
-            {activeTab === "subjects" && (
-                <section className="dashboard-grid">
-                    <div className="dashboard-card">
-                        <h2>Add Subject</h2>
-                        <input
-                            className="admin-input"
-                            type="text"
-                            value={newSubject}
-                            onChange={(e) =>
-                            setNewSubject(e.target.value)
-                            }
-                            placeholder="Subject Name"
-                        />
-
-                        <button
-                            className="admin-action-btn"
-                            onClick={handleCreateSubject}
-                        >
-                            Add Subject
-                        </button>
-
-                    </div>
-
-                    {subjects.map((subject) => (
-
-                        <div key={subject.subject_id} className="dashboard-card">
-                            <h2>{subject.subject_name}</h2>
-                            <p>Subject ID: {subject.subject_id}</p>
-                            <button
-                                className="admin-delete-btn"
-                                onClick={() =>
-                                    handleDeleteSubject(
-                                        subject.subject_id
-                                    )}>
-                                Delete Subject
-                            </button>
-                        </div>
-                    ))}
-                </section>)})
 
             {activeTab === "users" && (
                 <>
@@ -677,15 +399,7 @@ export default function AdminDashboard() {
                                     <h2>{user.first_name} {user.last_name}</h2>
 
                                     <p><strong>Email:</strong> {user.email}</p>
-                                    <p><strong>Phone:</strong> {user.phone_number}</p>
                                     <p><strong>User ID:</strong> {user.user_id}</p>
-
-                                    <button
-                                        className="admin-action-btn"
-                                        onClick={() => handleViewUserBookings(user)}
-                                    >
-                                        View History
-                                    </button>
 
                                     <button
                                         className="admin-delete-btn"
@@ -700,30 +414,344 @@ export default function AdminDashboard() {
                 </>
             )}
 
-             {showHistoryModal && (
-            <div className="modal-overlay">
+            {activeTab === "inbox" && (
+                <div className="inbox-page">
 
-                <div className="modal-content">
+                    <div className="mail-sidebar">
 
-                    <button
-                        className="modal-close"
-                        onClick={() => setShowHistoryModal(false)}
-                    >✕
-                    </button>
+                        <button
+                            className={mailFilter === "inbox" ? "active-mail-filter" : ""}
+                            onClick={() => {
+                                setMailFilter("inbox");
+                                setSelectedMessage(null);
+                            }}
+                        >
+                            Inbox
+                        </button>
 
-                    <h2>{selectedUserName} Booking History</h2>
+                        <button
+                            className={mailFilter === "unread" ? "active-mail-filter" : ""}
+                            onClick={() => {
+                                setMailFilter("unread");
+                                setSelectedMessage(null);
+                            }}
+                        >
+                            Unread
+                        </button>
 
-                    {selectedUserBookings.length === 0 ? (<p>No bookings found.</p>) :
-                        (selectedUserBookings.map((booking) => (<div key={booking.booking_id} className="history-item">
-                                <p><strong>Booking ID:</strong>{" "}{booking.booking_id}</p>
-                                <p><strong>Status:</strong>{" "}{booking.status}</p>
-                                <p><strong>Start:</strong>{" "}{new Date(booking.start_time).toLocaleString()}</p>
-                                <p><strong>Notes:</strong>{" "}{booking.notes}</p>
+                        <button
+                            className={mailFilter === "read" ? "active-mail-filter" : ""}
+                            onClick={() => {
+                                setMailFilter("read");
+                                setSelectedMessage(null);
+                            }}
+                        >
+                            Read
+                        </button>
+
+                        <button
+                            className={mailFilter === "contacted" ? "active-mail-filter" : ""}
+                            onClick={() => {
+                                setMailFilter("contacted");
+                                setSelectedMessage(null);
+                            }}
+                        >
+                            Contacted
+                        </button>
+
+                        <button
+                            className={mailFilter === "closed" ? "active-mail-filter" : ""}
+                            onClick={() => {
+                                setMailFilter("closed");
+                                setSelectedMessage(null);
+                            }}
+                        >
+                            Closed
+                        </button>
+
+                    </div>
+
+                    <div className="mail-main">
+                        {!selectedMessage ? (
+                            <>
+                                <div className="mail-header">
+                                    <input
+                                        className="mail-search"
+                                        type="text"
+                                        placeholder="Search emails..."
+                                        value={messageSearch}
+                                        onChange={(e) => setMessageSearch(e.target.value)}
+                                    />
+
+                                    <button
+                                        className="mail-sort-btn"
+                                        onClick={() =>
+                                            setSortOrder(
+                                                sortOrder === "newest"
+                                                    ? "oldest"
+                                                    : "newest"
+                                            )
+                                        }
+                                    >
+                                        {sortOrder === "newest"
+                                            ? "Newest ↓"
+                                            : "Oldest ↑"}
+                                    </button>
+
+                                    {selectedMessages.length > 0 && (
+                                        <button
+                                            className="bulk-delete-btn"
+                                            onClick={handleBulkDelete}
+                                        >
+                                            Delete ({selectedMessages.length})
+                                        </button>
+                                    )}
+
+                                </div>
+
+
+                                {filteredMessages.map((message) => (
+                                    <div
+                                        key={message.message_id}
+                                        className="mail-row"
+                                    >
+
+                                        <input
+                                            type="checkbox"
+                                            checked={selectedMessages.includes(message.message_id)}
+                                            onChange={(e) => {
+
+                                                e.stopPropagation();
+
+                                                if (selectedMessages.includes(message.message_id)) {
+
+                                                    setSelectedMessages(
+                                                        selectedMessages.filter(
+                                                            id => id !== message.message_id
+                                                        )
+                                                    );
+
+                                                } else {
+
+                                                    setSelectedMessages([
+                                                        ...selectedMessages,
+                                                        message.message_id
+                                                    ]);
+
+                                                }
+                                            }}
+                                        />
+
+                                        <div
+                                            className="mail-row-content"
+                                            onClick={() => handleViewMessage(message)}
+                                        >
+
+                                            <div className="mail-name">
+                                                {message.full_name}
+                                            </div>
+
+                                            <div className="mail-email">
+                                                {message.email}
+                                            </div>
+
+                                            <div className="mail-preview">
+                                                {message.message.substring(0, 100)}
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                ))}
+                            </>
+                        ) : (
+
+                            <div className="email-view">
+
+                                <button
+                                    className="back-btn"
+                                    onClick={() => setSelectedMessage(null)}
+                                >
+                                    ← Back
+                                </button>
+
+                                <h2>{selectedMessage.full_name}</h2>
+
+                                <p>
+                                    <strong>Email:</strong>{" "}
+                                    {selectedMessage.email}
+                                </p>
+
+                                <p>
+                                    <strong>Phone:</strong>{" "}
+                                    {selectedMessage.phone}
+                                </p>
+
+                                <p>
+                                    <strong>Interest:</strong>{" "}
+                                    {selectedMessage.interests}
+                                </p>
+
+                                <p>
+                                    <strong>Status:</strong>{" "}
+                                    {selectedMessage.status}
+                                </p>
+
+                                <hr />
+
+                                <p className="message-body">
+                                    {selectedMessage.message}
+                                </p>
+
+                                <button
+                                    className="admin-delete-btn"
+                                    onClick={() =>
+                                        handleDeleteMessage(
+                                            selectedMessage.message_id
+                                        )
+                                    }
+                                >
+                                    Delete Message
+                                </button>
+
                             </div>
-                        )))}
+
+                        )}
+
+                    </div>
+
                 </div>
+            )}
+
+            {editingTutor && (
+    <div className="modal-overlay">
+        <div className="modal-content">
+
+            <h2>Edit Tutor</h2>
+
+            <input
+                type="text"
+                value={editingTutor.first_name}
+                onChange={(e) =>
+                    setEditingTutor({
+                        ...editingTutor,
+                        first_name: e.target.value
+                    })
+                }
+            />
+
+            <input
+                type="text"
+                value={editingTutor.last_name}
+                onChange={(e) =>
+                    setEditingTutor({
+                        ...editingTutor,
+                        last_name: e.target.value
+                    })
+                }
+            />
+
+            <textarea
+                rows="5"
+                value={editingTutor.tutor_bio}
+                onChange={(e) =>
+                    setEditingTutor({
+                        ...editingTutor,
+                        tutor_bio: e.target.value
+                    })
+                }
+            />
+
+            <input
+                type="number"
+                value={editingTutor.experience}
+                onChange={(e) =>
+                    setEditingTutor({
+                        ...editingTutor,
+                        experience: Number(e.target.value)
+                    })
+                }
+            />
+
+            <div className="modal-buttons">
+                <button className="admin-action-btn" onClick={handleUpdateTutor}>
+                    Save Changes
+                </button>
+                <button
+                    className="admin-delete-btn"
+                    onClick={() => setEditingTutor(null)}>
+                    Cancel
+                </button>
             </div>
-        )}
+
+        </div>
+    </div>
+)}
+            {creatingTutor && (
+    <div className="modal-overlay">
+        <div className="modal-content">
+
+            <h2>Create Tutor</h2>
+
+            <input
+                type="text"
+                value={creatingTutor.first_name}
+                onChange={(e) =>
+                    setCreatingTutor({
+                        ...creatingTutor,
+                        first_name: e.target.value
+                    })
+                }
+            />
+
+            <input
+                type="text"
+                value={creatingTutor.last_name}
+                onChange={(e) =>
+                    setCreatingTutor({
+                        ...creatingTutor,
+                        last_name: e.target.value
+                    })
+                }
+            />
+
+            <textarea
+                rows="5"
+                value={creatingTutor.tutor_bio}
+                onChange={(e) =>
+                    setCreatingTutor({
+                        ...creatingTutor,
+                        tutor_bio: e.target.value
+                    })
+                }
+            />
+
+            <input
+                type="number"
+                value={creatingTutor.experience}
+                onChange={(e) =>
+                    setCreatingTutor({
+                        ...creatingTutor,
+                        experience: Number(e.target.value)
+                    })
+                }
+            />
+
+            <div className="modal-buttons">
+                <button className="admin-action-btn" onClick={handleCreateTutor}>
+                    Create Tutor
+                </button>
+                <button
+                    className="admin-delete-btn"
+                    onClick={() => setCreatingTutor(null)}>
+                    Cancel
+                </button>
+            </div>
+
+        </div>
+    </div>
+)}
 
         </main>
     );
