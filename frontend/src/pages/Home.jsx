@@ -48,7 +48,7 @@ export default function Home() {
         };
 
     try {
-        const response = await fetch("http://localhost:8000/contact-messages/", {
+        const response = await fetch("https://eztutoring.onrender.com/contact-messages/", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -87,7 +87,7 @@ export default function Home() {
 
         try {
             const response = await fetch(
-                `http://localhost:8000/homepage/image/${section}`,
+                 `https://eztutoring.onrender.com/homepage/image/${section}`,
                 {
                     method: "PUT",
                     body: formData,
@@ -256,7 +256,7 @@ export default function Home() {
                 <div className="info-card">
                     <div className="info-image">
                         <img
-                            src={`http://localhost:8000/uploads/homepage/about.jpg?v=${Date.now()}`}
+                            src={`https://eztutoring.onrender.com/uploads/homepage/about.jpg?v=${Date.now()}`}
                             alt="About Us"
                         />
                         {isAdmin && (
@@ -293,7 +293,7 @@ export default function Home() {
                 <div className="info-card">
                     <div className="info-image">
                         <img
-                            src={`http://localhost:8000/uploads/homepage/what_we_do.jpg?v=${Date.now()}`}
+                            src={`https://eztutoring.onrender.com/uploads/homepage/what_we_do.jpg?v=${Date.now()}`}
                             alt="About Us"
                         />
 
@@ -330,7 +330,7 @@ export default function Home() {
                 <div className="info-card">
                     <div className="info-image">
                         <img
-                            src={`http://localhost:8000/uploads/homepage/why_ez_tutoring.jpg?v=${Date.now()}`}
+                            src={`https://eztutoring.onrender.com/uploads/homepage/why_ez_tutoring.jpg?v=${Date.now()}`}
                             alt="About Us"
                         />
 
@@ -455,7 +455,6 @@ export default function Home() {
 
                     <input
                         type="tel"
-                        pattern="^\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$"
                         placeholder="Phone Number"
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
