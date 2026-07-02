@@ -4,6 +4,7 @@ import {useState, useEffect} from "react";
 
 export default function Home() {
 
+    const [homepageImages, setHomepageImages] = useState({});
     const location = useLocation();
         useEffect(() => {
             if (location.hash === "#contact") {
@@ -16,6 +17,12 @@ export default function Home() {
                 }
             }
         }, [location]);
+
+        useEffect(() => {
+            fetch("https://eztutoring.onrender.com/homepage/images")
+                .then(res => res.json())
+                .then(data => setHomepageImages(data));
+        }, []);
 
     const interestOptions = [
         {value: "reading", label: "Reading" },
@@ -278,7 +285,7 @@ export default function Home() {
                 <div className="info-card">
                     <div className="info-image">
                         <img
-                            src={`https://eztutoring.onrender.com/uploads/homepage/about.jpg?v=${Date.now()}`}
+                            src={homepageImages.about || ""}
                             alt="About Us"
                         />
                         {isAdmin && (
@@ -315,7 +322,7 @@ export default function Home() {
                 <div className="info-card">
                     <div className="info-image">
                         <img
-                            src={`https://eztutoring.onrender.com/uploads/homepage/what_we_do.jpg?v=${Date.now()}`}
+                            src={homepageImages.what_we_do || ""}
                             alt="About Us"
                         />
 
@@ -352,7 +359,7 @@ export default function Home() {
                 <div className="info-card">
                     <div className="info-image">
                         <img
-                            src={`https://eztutoring.onrender.com/uploads/homepage/why_ez_tutoring.jpg?v=${Date.now()}`}
+                            src={homepageImages.why || ""}
                             alt="About Us"
                         />
 

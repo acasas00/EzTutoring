@@ -1,7 +1,10 @@
-import os
-import shutil
-
+import cloudinary.uploader
+import app.config.cloudinary
 from fastapi import APIRouter, UploadFile, File, HTTPException
+from app.services.homepage_service import (
+    upload_homepage_picture,
+    display_homepage_images
+)
 
 router = APIRouter(
     prefix="/homepage",
@@ -34,16 +37,20 @@ async def upload_homepage_image(
             detail="File must be an image."
         )
 
-    os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-
-    filepath = os.path.join(
-        UPLOAD_FOLDER,
-        IMAGES[section]
+    result = cloudinary.uploader.upload(
+        await file.read(),
+        folder="ez_tutoring/homepage",
+        public_id=section,
+        overwrite=True
     )
 
-    with open(filepath, "wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
+    image_url = result["secure_url"]
 
-    return {
-        "message": "Homepage image updated successfully."
-    }
+    return upload_homepage_picture(
+        section,
+        image_url
+    )
+
+@router.get("/images")
+def get_images():
+    return display_homepage_images()
