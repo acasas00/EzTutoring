@@ -16,6 +16,7 @@ export default function AdminDashboard() {
     const [mailFilter, setMailFilter] = useState("new");
     const [sortOrder, setSortOrder] = useState("newest");
     const [selectedMessages, setSelectedMessages] = useState([]);
+    const [selectedImage, setSelectedImage] = useState(null);
 
     useEffect(() => {
 
@@ -139,6 +140,22 @@ export default function AdminDashboard() {
 
         const updatedTutor = await response.json();
 
+        if (selectedImage) {
+
+            const formData = new FormData();
+            formData.append("file", selectedImage);
+
+            await fetch(
+            `https://eztutoring.onrender.com/tutors/profile_image?tutor_id=${editingTutor.tutor_id}`,
+            {
+                method: "PUT",
+                body: formData
+            }
+            );
+            window.location.reload();
+
+        }
+
         setTutors(
             tutors.map((tutor) =>
                 tutor.tutor_id === updatedTutor.tutor_id
@@ -148,6 +165,7 @@ export default function AdminDashboard() {
         );
 
         setEditingTutor(null);
+        setSelectedImage(null);
 
     } catch (error) {
         console.error(error);
@@ -672,6 +690,11 @@ export default function AdminDashboard() {
                         experience: Number(e.target.value)
                     })
                 }
+            />
+            <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => setSelectedImage(e.target.files[0])}
             />
 
             <div className="modal-buttons">
