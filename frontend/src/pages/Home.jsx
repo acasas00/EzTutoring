@@ -1,8 +1,21 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { FaInstagram } from "react-icons/fa";
-import {useState} from "react";
+import {useState, useEffect} from "react";
 
 export default function Home() {
+
+    const location = useLocation();
+        useEffect(() => {
+            if (location.hash === "#contact") {
+                const element = document.getElementById("contact");
+
+                if (element) {
+                    element.scrollIntoView({
+                        behavior: "smooth"
+                    });
+                }
+            }
+        }, [location]);
 
     const interestOptions = [
         {value: "reading", label: "Reading" },
