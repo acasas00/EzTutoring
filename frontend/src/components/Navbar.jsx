@@ -49,7 +49,7 @@ export default function Navbar(){
                     </Link>
                     )
                 }
-                {settings.show_tutors && (
+                {settings.show_tutors !== false && (
                     <Link to="/tutors">
                         Our Tutors
                     </Link>
