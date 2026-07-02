@@ -722,6 +722,7 @@ export default function AdminDashboard() {
             <input
                 type="text"
                 value={creatingTutor.first_name}
+                placeholder="First Name"
                 onChange={(e) =>
                     setCreatingTutor({
                         ...creatingTutor,
@@ -732,6 +733,7 @@ export default function AdminDashboard() {
 
             <input
                 type="text"
+                placeholder="Last Name"
                 value={creatingTutor.last_name}
                 onChange={(e) =>
                     setCreatingTutor({
@@ -743,6 +745,7 @@ export default function AdminDashboard() {
 
             <textarea
                 rows="5"
+                placeholder="Insert description"
                 value={creatingTutor.tutor_bio}
                 onChange={(e) =>
                     setCreatingTutor({
@@ -754,6 +757,7 @@ export default function AdminDashboard() {
 
             <input
                 type="number"
+                placeholder="Experience"
                 value={creatingTutor.experience}
                 onChange={(e) =>
                     setCreatingTutor({
