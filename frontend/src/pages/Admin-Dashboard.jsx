@@ -362,11 +362,7 @@ export default function AdminDashboard() {
                             <div key={tutor.tutor_id} className="dashboard-card">
                                 <img
                                     className="admin-tutor-image"
-                                    src={
-                                        tutor.profile_image
-                                            ? `https://eztutoring.onrender.com${tutor.profile_image}`
-                                            : "/default-profile.png"
-                                    }
+                                    src={tutor.profile_image}
                                     alt={`${tutor.first_name} ${tutor.last_name}`}
                                 />
 
