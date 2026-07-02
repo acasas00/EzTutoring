@@ -360,11 +360,17 @@ export default function AdminDashboard() {
                     <section className="tutors-grid">
                         {filteredTutors.map((tutor) => (
                             <div key={tutor.tutor_id} className="dashboard-card">
+                                {tutor.profile_image ? (
                                 <img
                                     className="admin-tutor-image"
                                     src={tutor.profile_image}
                                     alt={`${tutor.first_name} ${tutor.last_name}`}
                                 />
+                            ) : (
+                                <div className="admin-tutor-placeholder">
+                                    ?
+                                </div>
+                            )}
 
                                 <h2>{tutor.first_name} {tutor.last_name}</h2>
 
