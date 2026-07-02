@@ -1,6 +1,8 @@
 import "./Login.css";
 import {useState} from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import API_URL from "../utils/api";
+
 
 export default function Login() {
     const [email,setEmail] =useState("");
@@ -18,7 +20,7 @@ export default function Login() {
 
             console.log(formData.toString());
             const response = await  fetch(
-                "https://eztutoring.onrender.com/auth/login",
+                `${API_URL}/auth/login`,
                 {
                     method: "POST",
                     headers: {

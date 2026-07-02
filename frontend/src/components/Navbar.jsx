@@ -1,5 +1,6 @@
 import {Link} from "react-router-dom";
 import logo from "../assets/ez_icon.png";
+import API_URL from "../utils/api";
 import {getCurrentUser} from "../utils/auth.js";
 import {useEffect, useState} from "react";
 
@@ -10,7 +11,7 @@ export default function Navbar(){
 
     useEffect(() => {
 
-    fetch("https://eztutoring.onrender.com/settings/")
+    fetch(`${API_URL}/settings/`)
         .then(response => response.json())
         .then(data => setSettings(data))
         .catch(error => console.error(error));

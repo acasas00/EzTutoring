@@ -1,6 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { FaInstagram } from "react-icons/fa";
 import {useState, useEffect} from "react";
+import API_URL from "../utils/api.js";
 
 export default function Home() {
 
@@ -19,7 +20,7 @@ export default function Home() {
         }, [location]);
 
         useEffect(() => {
-            fetch("https://eztutoring.onrender.com/homepage/images")
+            fetch(`${API_URL}/homepage/images/`)
                 .then(res => res.json())
                 .then(data => setHomepageImages(data));
         }, []);
@@ -68,7 +69,7 @@ export default function Home() {
         };
 
     try {
-        const response = await fetch("https://eztutoring.onrender.com/contact-messages/", {
+        const response = await fetch(`${API_URL}/contact-messages/`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -107,7 +108,7 @@ export default function Home() {
 
         try {
             const response = await fetch(
-                 `https://eztutoring.onrender.com/homepage/image/${section}`,
+                 `${API_URL}/homepage/image/${section}`,
                 {
                     method: "PUT",
                     body: formData,

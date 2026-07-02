@@ -19,9 +19,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:5173",
-        "https://eztutoring.onrender.com",
-        "https://eztutoring-1.onrender.com",
-        "https://eztutoring-1-t7fo.onrender.com"
+        "https://ez-tutoring.com",
+        "https://www.ez-tutoring.com"
     ],
     allow_credentials=True,
     allow_methods=["*"],

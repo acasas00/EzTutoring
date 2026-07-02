@@ -1,5 +1,6 @@
 import "./AdminDashboard.css";
 import {useState, useEffect} from "react";
+import API_URL from "../utils/api.js";
 
 export default function AdminDashboard() {
 
@@ -23,7 +24,7 @@ export default function AdminDashboard() {
 
     const token = localStorage.getItem("token");
 
-    fetch("https://eztutoring.onrender.com/admin/users",
+    fetch(`${API_URL}/admin/users/`,
     {
         headers: {
             Authorization: `Bearer ${token}`
@@ -38,17 +39,17 @@ export default function AdminDashboard() {
     .then(data => {if(data){setUsers(data);}})
     .catch(error => console.error(error));
 
-    fetch("https://eztutoring.onrender.com/tutors/")
+    fetch(`${API_URL}/tutors/`)
         .then(response => response.json())
         .then(data => setTutors(data))
         .catch(error => console.error(error));
 
-    fetch("https://eztutoring.onrender.com/contact-messages/search/all")
+    fetch(`${API_URL}/contact-messages/search/all/`)
         .then(response => response.json())
         .then(data => setMessages(data))
         .catch(error => console.error(error));
 
-    fetch("https://eztutoring.onrender.com/settings/")
+    fetch(`${API_URL}/settings/`)
     .then(response => response.json())
     .then(data => setSettings(data))
     .catch(error => console.error(error));
@@ -65,7 +66,7 @@ export default function AdminDashboard() {
 
         try {
             const response = await fetch(
-                 `https://eztutoring.onrender.com/users/${userId}`,
+                        `${API_URL}/users/${userId}`,
                 {
                     method: "DELETE",
                     headers: {
@@ -107,7 +108,7 @@ export default function AdminDashboard() {
         if(!window.confirm("Delete Tutor?")){return}
 
         try{
-            const response = await fetch(`https://eztutoring.onrender.com/admin/tutors/${tutorId}`,
+            const response = await fetch(`${API_URL}/admin/tutors/${tutorId}/`,
                 {
                     method: "DELETE",
                     headers: {
@@ -130,7 +131,7 @@ export default function AdminDashboard() {
     try {
 
         const response = await fetch(
-            "https://eztutoring.onrender.com/tutors/",
+            `${API_URL}/tutors/`,
             {
                 method: "PUT",
                 headers: {
@@ -151,8 +152,7 @@ export default function AdminDashboard() {
             const formData = new FormData();
             formData.append("file", selectedImage);
 
-            await fetch(
-            `https://eztutoring.onrender.com/tutors/profile_image?tutor_id=${editingTutor.tutor_id}`,
+            await fetch(`${API_URL}/tutors/profile_image?tutor_id=${editingTutor.tutor_id}`,
             {
                 method: "PUT",
                 body: formData
@@ -186,7 +186,7 @@ export default function AdminDashboard() {
         const token = localStorage.getItem("token");
 
         const response = await fetch(
-            "https://eztutoring.onrender.com/admin/tutors",
+                `${API_URL}/admin/tutors/`,
             {
                 method: "POST",
                 headers: {
@@ -218,8 +218,7 @@ export default function AdminDashboard() {
     setSelectedMessage(message);
 
     try {
-        await fetch(
-            `https://eztutoring.onrender.com/contact-messages/${message.message_id}/is-read`,
+        await fetch(`${API_URL}/contact-messages/${message.message_id}/is-read/`,
             {
                 method: "PUT"
             }
@@ -281,8 +280,7 @@ export default function AdminDashboard() {
     try {
         await Promise.all(
             selectedMessages.map((messageId) =>
-                fetch(
-                    `https://eztutoring.onrender.com/contact-messages/${messageId}`,
+                fetch(`${API_URL}/contact-messages/${messageId}`,
                     {
                         method: "DELETE"
                     }
@@ -312,7 +310,7 @@ export default function AdminDashboard() {
     try {
 
         const response = await fetch(
-            "https://eztutoring.onrender.com/settings/",
+            `${API_URL}/settings/`,
             {
                 method: "PUT",
                 headers: {

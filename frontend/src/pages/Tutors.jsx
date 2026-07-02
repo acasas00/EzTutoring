@@ -1,6 +1,8 @@
 import "./Tutors.css";
 import {useEffect, useState} from "react";
 import {Navigate} from "react-router-dom";
+import API_URL from "../utils/api";
+
 
 export default function Tutors() {
     const[tutors,setTutors] = useState([]);
@@ -8,7 +10,7 @@ export default function Tutors() {
     const [settings, setSettings] = useState(null);
 
     useEffect(() => {
-        fetch("https://eztutoring.onrender.com/tutors")
+        fetch(`${API_URL}/tutors/`)
             .then(response=>response.json())
             .then(data=>{
                 setTutors(data)
@@ -17,7 +19,7 @@ export default function Tutors() {
                 console.error(error);
             });
 
-        fetch("https://eztutoring.onrender.com/settings/")
+        fetch(`${API_URL}/settings/`)
             .then(response => response.json())
             .then(data => setSettings(data));
 
@@ -69,11 +71,7 @@ export default function Tutors() {
                             {tutor.profile_image ? (
                                 <img
                                     className="tutor-photo"
-                                    src={
-                                        tutor.profile_image.startsWith("http")
-                                            ? tutor.profile_image
-                                            : `https://eztutoring.onrender.com${tutor.profile_image}`
-                                    }
+                                    src={tutor.profile_image}
                                     alt={`${tutor.first_name} ${tutor.last_name}`}
                                 />
                             ) : (
