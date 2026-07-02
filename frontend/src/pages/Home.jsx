@@ -148,6 +148,16 @@ export default function Home() {
                 "Field trips and fun learning experiences all summer long",
             ],
         },
+        {
+            order: 5,
+            title: "Winter Break Program",
+            items: [
+                "Academic tutoring to reinforce classroom concepts",
+                "Homework help and personalized instruction",
+                "Educational games, activities, and enrichment",
+                "Prepare students for a successful return to school",
+            ],
+        },
     ];
 
     const sortedServices = [...services].sort(
@@ -156,7 +166,7 @@ export default function Home() {
 
     return (
         <main className="home-page">
-            <a href="#co`ntact" className="floating-contact-btn">
+            <a href="#contact" className="floating-contact-btn">
             Contact Us
             </a>
             <section className="home-hero">
@@ -210,28 +220,29 @@ export default function Home() {
                 )}
 
                 <section className="services-section">
-                    <div
-                        key={serviceIndex}
-                        className="services-slide"
-                    >
-                        {sortedServices
-                            .slice(serviceIndex, serviceIndex + 4)
-                            .map((service, index) => (
-                                <div className="service-card" key={index}>
-                                    <h3>{service.title}</h3>
+                    {sortedServices
+                        .slice(serviceIndex, serviceIndex + 4)
+                        .map((service, index) => (
 
-                                    <ul>
-                                        {service.items.map((item, i) => (
-                                            <li key={i}>{item}</li>
-                                        ))}
-                                    </ul>
+                            <div
+                                className="service-card"
+                                key={index}
+                            >
+                                <h3>{service.title}</h3>
 
-                                    <Link to="/services">
-                                        Learn More
-                                    </Link>
-                                </div>
-                            ))}
-                    </div>
+                                <ul>
+                                    {service.items.map((item, i) => (
+                                        <li key={i}>{item}</li>
+                                    ))}
+                                </ul>
+
+                                <Link to="/services">
+                                    Learn More
+                                </Link>
+                            </div>
+
+                        ))}
+
                 </section>
 
                 {sortedServices.length > 4 && (
@@ -321,7 +332,7 @@ export default function Home() {
                             We work with students on practical solutions that fit
                             their schedules, reduce stress, and improve academic
                             performance through personalized tutoring sessions.
-                        </p>`
+                        </p>
                     </div>
                 </div>
 
