@@ -227,7 +227,7 @@ export default function Home() {
                         {sortedServices
                             .slice(serviceIndex, serviceIndex + 4)
                             .map((service, index) => (
-                                <div className="service-card" key={index}>
+                                <div className="service-card" key={`${serviceIndex}-${index}`}>
                                     <h3>{service.title}</h3>
 
                                     <ul>
