@@ -8,6 +8,8 @@ from app.routes import homepage
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
+from dotenv import load_dotenv
+load_dotenv()
 
 app = FastAPI(title="EZ Tutoring API")
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
