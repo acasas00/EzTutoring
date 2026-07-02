@@ -156,7 +156,7 @@ export default function Home() {
 
     return (
         <main className="home-page">
-            <a href="#contact" className="floating-contact-btn">
+            <a href="#co`ntact" className="floating-contact-btn">
             Contact Us
             </a>
             <section className="home-hero">
@@ -217,7 +217,7 @@ export default function Home() {
                         {sortedServices
                             .slice(serviceIndex, serviceIndex + 4)
                             .map((service, index) => (
-                                <div className="service-card" key={`${serviceIndex}-${index}`}>
+                                <div className="service-card" key={index}>
                                     <h3>{service.title}</h3>
 
                                     <ul>
