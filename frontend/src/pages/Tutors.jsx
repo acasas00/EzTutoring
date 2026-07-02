@@ -60,8 +60,11 @@ export default function Tutors() {
                                 className="tutor-photo"
                                 src={
                                     tutor.profile_image
-                                        ? `https://eztutoring.onrender.com${tutor.profile_image}`
-                                        : "/default-profile.png"}
+                                        ? tutor.profile_image.startsWith("http")
+                                            ? tutor.profile_image
+                                            : `https://eztutoring.onrender.com${tutor.profile_image}`
+                                        : "/default-profile.png"
+                                }
                                 alt={`${tutor.first_name} ${tutor.last_name}`}
                             />
                         </div>
