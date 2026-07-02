@@ -17,6 +17,7 @@ export default function AdminDashboard() {
     const [sortOrder, setSortOrder] = useState("newest");
     const [selectedMessages, setSelectedMessages] = useState([]);
     const [selectedImage, setSelectedImage] = useState(null);
+    const [settings, setSettings] = useState({});
 
     useEffect(() => {
 
@@ -46,6 +47,11 @@ export default function AdminDashboard() {
         .then(response => response.json())
         .then(data => setMessages(data))
         .catch(error => console.error(error));
+
+    fetch("https://eztutoring.onrender.com/settings/")
+    .then(response => response.json())
+    .then(data => setSettings(data))
+    .catch(error => console.error(error));
 
 }, []);
 
@@ -299,6 +305,41 @@ export default function AdminDashboard() {
         alert("Unable to delete selected messages");
     }
 };
+    const handleSettingChange = async (settingName, value) => {
+
+    const token = localStorage.getItem("token");
+
+    try {
+
+        const response = await fetch(
+            "https://eztutoring.onrender.com/settings/",
+            {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    setting_name: settingName,
+                    setting_value: value
+                })
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error("Unable to update setting");
+        }
+
+        setSettings({
+            ...settings,
+            [settingName]: value
+        });
+
+    } catch (error) {
+        console.error(error);
+        alert("Unable to save setting.");
+    }
+};
 
     return (
         <main className="dashboard-page">
@@ -326,6 +367,13 @@ export default function AdminDashboard() {
                     onClick={() => setActiveTab("inbox")}
                     >
                     Inbox
+                </button>
+
+                <button
+                    className={activeTab === "settings" ? "active-tab" : ""}
+                    onClick={() => setActiveTab("settings")}
+                >
+                    Website
                 </button>
 
             </nav>
@@ -642,6 +690,29 @@ export default function AdminDashboard() {
                     </div>
 
                 </div>
+            )}
+
+            {activeTab === "settings" && (
+
+            <section className="dashboard-grid">
+                <div className="dashboard-card">
+                    <h2>Website Settings</h2>
+                    <label className="setting-row">
+
+                        <input
+                            type="checkbox"
+                            checked={settings.show_tutors ?? true}
+                            onChange={(e) =>
+                                handleSettingChange(
+                                    "show_tutors",
+                                    e.target.checked
+                                )
+                            }
+                        />
+                        Show Tutors Page
+                    </label>
+                </div>
+            </section>
             )}
 
             {editingTutor && (

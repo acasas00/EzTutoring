@@ -1,10 +1,21 @@
 import {Link} from "react-router-dom";
 import logo from "../assets/ez_icon.png";
 import {getCurrentUser} from "../utils/auth.js";
+import {useEffect, useState} from "react";
 
 export default function Navbar(){
 
     const currentUser = getCurrentUser();
+    const [settings, setSettings] = useState({});
+
+    useEffect(() => {
+
+    fetch("https://eztutoring.onrender.com/settings/")
+        .then(response => response.json())
+        .then(data => setSettings(data))
+        .catch(error => console.error(error));
+
+}, []);
 
     return(
         <nav className="navbar">
@@ -38,7 +49,11 @@ export default function Navbar(){
                     </Link>
                     )
                 }
-                <Link to="/tutors">Our Tutors</Link>
+                {settings.show_tutors && (
+                    <Link to="/tutors">
+                        Our Tutors
+                    </Link>
+                )}
                 <Link to="/services">Our Services</Link>
             </div>
         </nav>

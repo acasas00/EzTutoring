@@ -1,9 +1,11 @@
 import "./Tutors.css";
 import {useEffect, useState} from "react";
+import {Navigate} from "react-router-dom";
 
 export default function Tutors() {
     const[tutors,setTutors] = useState([]);
     const[searchTerm, setSearchTerm] = useState("");
+    const [settings, setSettings] = useState(null);
 
     useEffect(() => {
         fetch("https://eztutoring.onrender.com/tutors")
@@ -15,6 +17,10 @@ export default function Tutors() {
                 console.error(error);
             });
 
+        fetch("https://eztutoring.onrender.com/settings/")
+            .then(response => response.json())
+            .then(data => setSettings(data));
+
     }, []);
 
     const filteredTutors = tutors.filter((tutor) => {
@@ -22,6 +28,10 @@ export default function Tutors() {
         .toLowerCase()
         .includes(searchTerm.toLowerCase());
     });
+
+    if (settings && !settings.show_tutors) {
+        return <Navigate to="/" replace />;
+}
 
     return (
         <main className="tutors-page">
