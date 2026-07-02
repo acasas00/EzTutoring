@@ -39,12 +39,16 @@ def find_tutors():
 @router.put("/profile_image", response_model=TutorProfileImageResponse)
 async def upload_tutor_profile_image(tutor_id: int,file: UploadFile = File(...)
 ):
-    result = cloudinary.uploader.upload(
-        await file.read(),
-        folder="ez_tutoring/profile_pictures",
-        public_id=f"tutor_{tutor_id}",
-        overwrite=True
-    )
+    try:
+        result = cloudinary.uploader.upload(
+            await file.read(),
+            folder="ez_tutoring/profile_pictures",
+            public_id=f"tutor_{tutor_id}",
+            overwrite=True
+        )
+    except Exception as e:
+        print("CLOUDINARY ERROR:", e)
+        raise
 
     profile_image = result["secure_url"]
     db_tutor = Tutor(
