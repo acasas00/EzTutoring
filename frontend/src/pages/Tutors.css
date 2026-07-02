@@ -119,3 +119,23 @@
     justify-content: center;
     margin-bottom: 20px;
 }
+
+.tutor-photo-placeholder {
+    width: 160px;
+    height: 160px;
+
+    border-radius: 50%;
+
+    background: #2b2b2b;
+    border: 3px solid #F4C542;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #F4C542;
+    font-size: 4rem;
+    font-weight: bold;
+
+    margin: 0 auto;
+}
