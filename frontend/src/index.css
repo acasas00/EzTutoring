@@ -526,39 +526,3 @@ body {
     color: white;
     font-size: 1rem;
 }
-
-.services-slide {
-    display: flex;
-    gap: 2rem;
-    width: 100%;
-    animation: slideIn 0.35s ease;
-}
-
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateX(30px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-.service-card {
-    animation: serviceFade .35s ease;
-}
-
-@keyframes serviceFade {
-    from {
-        opacity: 0;
-        transform: translateX(20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
