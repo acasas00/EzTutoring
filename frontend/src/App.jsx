@@ -1,6 +1,7 @@
 import {BrowserRouter, Routes, Route} from "react-router-dom";
 import Navbar from "./components/Navbar.jsx"
 import "./App.css"
+import { Link } from "react-router-dom";
 
 import Home from "./pages/Home.jsx"
 import Tutors from "./pages/Tutors.jsx"
@@ -21,9 +22,9 @@ function App(){
         </Routes>
               <footer className="site-footer">
                 <span>© 2026 EZ Tutoring</span>
-                <a href="/login" className="admin-login-link">
+                <Link to="/login" className="admin-login-link">
                     Admin Portal
-                </a>
+                </Link>
             </footer>
       </BrowserRouter>
   )
