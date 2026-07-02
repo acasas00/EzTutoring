@@ -148,6 +148,16 @@ export default function Home() {
                 "Field trips and fun learning experiences all summer long",
             ],
         },
+        {
+            order: 5,
+            title: "Winter Break Program",
+            items: [
+                "Academic tutoring to stay on track during the break",
+                "Homework help and review of key concepts",
+                "Enrichment activities in a fun learning environment",
+                "Prepare students for a successful return to school",
+            ],
+        },
     ];
 
     const sortedServices = [...services].sort(
