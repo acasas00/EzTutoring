@@ -1,6 +1,8 @@
 from typing import List
 from fastapi import APIRouter, HTTPException
 from fastapi import UploadFile, File
+import cloudinary.uploader
+import app.config.cloudinary
 from app.models.tutor_profile import Tutor
 from app.schemas.tutor_schema import TutorUpdate, TutorResponse, TutorProfileImageResponse
 from app.services.tutor_service import update_tutor_profile, display_tutor_profiles, upload_picture
@@ -37,16 +39,14 @@ def find_tutors():
 @router.put("/profile_image", response_model=TutorProfileImageResponse)
 async def upload_tutor_profile_image(tutor_id: int,file: UploadFile = File(...)
 ):
-    import os
+    result = cloudinary.uploader.upload(
+        await file.read(),
+        folder="ez_tutoring/profile_pictures",
+        public_id=f"tutor_{tutor_id}",
+        overwrite=True
+    )
 
-    extension = os.path.splitext(file.filename)[1]
-    filename = f"tutor_{tutor_id}{extension}"
-    filepath = f"uploads/profile_pictures/{filename}"
-
-    with open(filepath, "wb") as buffer:
-        buffer.write(await file.read())
-
-    profile_image = f"/uploads/profile_pictures/{filename}"
+    profile_image = result["secure_url"]
     db_tutor = Tutor(
         tutor_id=tutor_id,
         profile_image=profile_image
