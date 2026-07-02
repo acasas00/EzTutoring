@@ -128,14 +128,10 @@ body {
 }
 
 .services-section {
-  max-width: 1180px;
-  margin: -150px auto 80px;
-  padding: 0 25px;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 18px;
-  position: relative;
-  z-index: 2;
+    display: grid;
+    justify-content: center;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
 }
 
 .service-card {
@@ -423,17 +419,9 @@ body {
 
 .services-wrapper {
     position: relative;
-
     max-width: 1320px;
     margin: -95px auto 80px;
-
     padding: 0;
-}
-
-.services-section {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 18px;
 }
 
 
@@ -462,11 +450,11 @@ body {
 }
 
 .services-arrow:first-of-type {
-    left: -20px;
+    left: -150px;
 }
 
 .services-arrow:last-of-type {
-    right: -20px;
+    right: -150px;
 }
 
 .services-arrow:hover:not(:disabled) {
