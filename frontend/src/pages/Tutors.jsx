@@ -56,17 +56,22 @@ export default function Tutors() {
                     >
 
                         <div className="tutor-photo-container">
-                            <img
-                                className="tutor-photo"
-                                src={
-                                    tutor.profile_image
-                                        ? tutor.profile_image.startsWith("http")
+                            {tutor.profile_image ? (
+                                <img
+                                    className="tutor-photo"
+                                    src={
+                                        tutor.profile_image.startsWith("http")
                                             ? tutor.profile_image
                                             : `https://eztutoring.onrender.com${tutor.profile_image}`
-                                        : "/default-profile.png"
-                                }
-                                alt={`${tutor.first_name} ${tutor.last_name}`}
-                            />
+                                    }
+                                    alt={`${tutor.first_name} ${tutor.last_name}`}
+                                />
+                            ) : (
+                                <div className="tutor-photo-placeholder">
+                                    ?
+                                </div>
+                            )}
+
                         </div>
 
                         <h2>
