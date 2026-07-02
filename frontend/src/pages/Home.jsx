@@ -220,30 +220,28 @@ export default function Home() {
                 )}
 
                 <section className="services-section">
+                    <div
+                        key={serviceIndex}
+                        className="services-slide"
+                    >
+                        {sortedServices
+                            .slice(serviceIndex, serviceIndex + 4)
+                            .map((service, index) => (
+                                <div className="service-card" key={index}>
+                                    <h3>{service.title}</h3>
 
-                    {sortedServices
-                        .slice(serviceIndex, serviceIndex + 4)
-                        .map((service, index) => (
+                                    <ul>
+                                        {service.items.map((item, i) => (
+                                            <li key={i}>{item}</li>
+                                        ))}
+                                    </ul>
 
-                            <div
-                                className="service-card"
-                                key={index}
-                            >
-                                <h3>{service.title}</h3>
-
-                                <ul>
-                                    {service.items.map((item, i) => (
-                                        <li key={i}>{item}</li>
-                                    ))}
-                                </ul>
-
-                                <Link to="/services">
-                                    Learn More
-                                </Link>
-                            </div>
-
-                        ))}
-
+                                    <Link to="/services">
+                                        Learn More
+                                    </Link>
+                                </div>
+                            ))}
+                    </div>
                 </section>
 
                 {sortedServices.length > 4 && (
