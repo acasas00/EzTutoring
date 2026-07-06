@@ -28,7 +28,7 @@ body {
 .logo-text h1 {
   font-family: 'Poppins', sans-serif;
   color: white;
-  font-size: 2rem;
+  font-size: 1.3rem;
   margin: 0;
   line-height: 1;
 }
@@ -577,7 +577,7 @@ body {
   }
 
   .logo img {
-    height: 58px;
+    height: 55px;
   }
 
   .logo-text h1 {
@@ -599,4 +599,23 @@ body {
   .nav-links a {
     font-size: 0.85rem;
   }
+}
+
+@media (max-width: 768px) {
+  .logo {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+}
+
+@media (max-width:768px) {
+    .logo-text h1 {
+        font-family: "Poppins", sans-serif;
+    }
+
+    .logo-slogan,
+    .logo-contact {
+        font-family: "Nunito", sans-serif;
+    }
 }
