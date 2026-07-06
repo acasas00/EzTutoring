@@ -1,5 +1,6 @@
 import "./AdminDashboard.css";
 import {useState, useEffect} from "react";
+import {useNavigate} from "react-router-dom";
 import API_URL from "../utils/api.js";
 
 export default function AdminDashboard() {
@@ -19,6 +20,7 @@ export default function AdminDashboard() {
     const [selectedMessages, setSelectedMessages] = useState([]);
     const [selectedImage, setSelectedImage] = useState(null);
     const [settings, setSettings] = useState({});
+    const navigate = useNavigate();
 
     useEffect(() => {
 
@@ -339,10 +341,18 @@ export default function AdminDashboard() {
     }
 };
 
+    const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/");
+    };
+
     return (
         <main className="dashboard-page">
 
             <h1>Admin Dashboard</h1>
+            <button className="logout-btn" onClick={handleLogout}>
+                Sign Out
+            </button>
 
             <nav className="admin-nav">
 
