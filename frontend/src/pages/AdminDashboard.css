@@ -565,25 +565,44 @@
 @media (max-width:768px){
 
     .inbox-page{
-        grid-template-columns:1fr;
+        display:block;
+        min-height:auto;
     }
 
     .mail-sidebar{
+        display:flex;
         flex-direction:row;
+        align-items:center;
+        justify-content:flex-start;
+
         overflow-x:auto;
-        white-space:nowrap;
+        overflow-y:hidden;
+
         gap:10px;
         padding:10px;
+
+        background:#202424;
+        border:2px solid #F4C542;
+        border-radius:15px;
+
+        scrollbar-width:none;
+    }
+
+    .mail-sidebar::-webkit-scrollbar{
+        display:none;
     }
 
     .mail-sidebar button{
         flex:0 0 auto;
+        padding:10px 16px;
         text-align:center;
+        width:auto;
     }
 
     .mail-header{
         flex-direction:column;
         align-items:stretch;
+        gap:10px;
     }
 
     .mail-search,
