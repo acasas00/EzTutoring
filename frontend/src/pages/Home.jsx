@@ -185,6 +185,17 @@ export default function Home() {
         (a, b) => a.order - b.order
     );
 
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth <= 768);
+        };
+
+        window.addEventListener("resize", handleResize);
+
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
     return (
         <main className="home-page">
             <a href="#contact" className="floating-contact-btn">
@@ -242,7 +253,7 @@ export default function Home() {
 
                 <section className="services-section">
                     {sortedServices
-                        .slice(serviceIndex, serviceIndex + 4)
+                        .slice(serviceIndex, serviceIndex + (isMobile ? 1 : 4))
                         .map((service, index) => (
 
                             <div
@@ -271,10 +282,10 @@ export default function Home() {
                         className="services-arrow"
                         onClick={() =>
                             setServiceIndex((prev) =>
-                                Math.min(prev + 1, sortedServices.length - 4)
+                                Math.min(prev + 1, sortedServices.length - (isMobile ? 1 : 4))
                             )
                         }
-                        disabled={serviceIndex >= sortedServices.length - 4}
+                        disabled={serviceIndex >= sortedServices.length - (isMobile ? 1 : 4)}
                     >
                         &#10095;
                     </button>

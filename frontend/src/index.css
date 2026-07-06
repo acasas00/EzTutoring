@@ -619,3 +619,35 @@ body {
         font-family: "Nunito", sans-serif;
     }
 }
+
+@media (max-width: 768px) {
+    .admin-dashboard {
+        padding-top: 35px;
+    }
+}
+
+@media (max-width:768px){
+
+    .services-wrapper{
+        max-width:420px;
+        margin:-60px auto 50px;
+    }
+
+    .services-section{
+        grid-template-columns:1fr;
+        justify-items:center;
+    }
+
+    .service-card{
+        width:90%;
+        max-width:360px;
+    }
+
+    .services-arrow:first-of-type{
+        left:-10px;
+    }
+
+    .services-arrow:last-of-type{
+        right:-10px;
+    }
+}
