@@ -514,3 +514,89 @@ body {
     color: white;
     font-size: 1rem;
 }
+
+@media (max-width: 768px) {
+  .navbar {
+    height: auto;
+    min-height: 90px;
+    padding: 14px 18px;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .logo {
+    margin-right: 0;
+    gap: 10px;
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+    text-align: center;
+  }
+
+  .logo img {
+    height: 70px;
+  }
+
+  .logo-text h1 {
+    font-size: 1.5rem;
+  }
+
+  .logo-slogan {
+    font-size: 0.8rem;
+    margin-top: 4px;
+  }
+
+  .logo-contact {
+    margin-left: 0;
+    width: 100%;
+    align-items: center;
+    line-height: 1.35;
+  }
+
+  .logo-contact span {
+    font-size: 0.85rem;
+  }
+
+  .nav-links {
+    margin: 0;
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 18px;
+  }
+
+  .nav-links a {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar {
+    padding: 12px 10px;
+  }
+
+  .logo img {
+    height: 58px;
+  }
+
+  .logo-text h1 {
+    font-size: 1.25rem;
+  }
+
+  .logo-slogan {
+    font-size: 0.75rem;
+  }
+
+  .logo-contact span {
+    font-size: 0.78rem;
+  }
+
+  .nav-links {
+    gap: 12px;
+  }
+
+  .nav-links a {
+    font-size: 0.85rem;
+  }
+}
