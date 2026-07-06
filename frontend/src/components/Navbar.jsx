@@ -7,7 +7,7 @@ import {useEffect, useState} from "react";
 export default function Navbar(){
 
     const currentUser = getCurrentUser();
-    const [settings, setSettings] = useState({});
+    const [settings, setSettings] = useState(null);
 
     useEffect(() => {
 
@@ -50,7 +50,7 @@ export default function Navbar(){
                     </Link>
                     )
                 }
-                {settings.show_tutors !== false && (
+                {settings?.show_tutors && (
                     <Link to="/tutors">
                         Our Tutors
                     </Link>

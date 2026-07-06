@@ -561,3 +561,46 @@
 .logout-btn:hover{
     background:#a61f1f;
 }
+
+@media (max-width:768px){
+
+    .inbox-page{
+        grid-template-columns:1fr;
+    }
+
+    .mail-sidebar{
+        flex-direction:row;
+        overflow-x:auto;
+        white-space:nowrap;
+        gap:10px;
+        padding:10px;
+    }
+
+    .mail-sidebar button{
+        flex:0 0 auto;
+        text-align:center;
+    }
+
+    .mail-header{
+        flex-direction:column;
+        align-items:stretch;
+    }
+
+    .mail-search,
+    .mail-sort-btn,
+    .bulk-delete-btn{
+        width:100%;
+    }
+
+    .mail-row{
+        padding:15px;
+    }
+
+    .mail-row-content{
+        margin-top:10px;
+    }
+
+    .email-view{
+        padding:18px;
+    }
+}
