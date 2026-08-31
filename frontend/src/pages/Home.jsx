@@ -238,6 +238,126 @@ export default function Home() {
                 </div>
             </section>
 
+            <section className="mission-vision-section">
+                <div className="mission-vision-inner">
+
+                    <div className="mv-heading">
+                        <p className="mv-eyebrow">
+                            EZ TUTORING
+                        </p>
+
+                        <h2>
+                            MISSION
+                            <span>•</span>
+                            VISION
+                            <span>•</span>
+                            OUR COMMITMENT
+                        </h2>
+                    </div>
+
+
+                    <div className="mv-legacy-banner">
+
+                        <div className="mv-legacy-copy">
+                            <span>
+                                SERVING OUR COMMUNITY WITH PRIDE SINCE 2009
+                            </span>
+
+                            <strong>
+                                Over 17 Years of Educational Excellence
+                            </strong>
+                        </div>
+
+                        <div className="mv-years-badge">
+                            <strong>17+</strong>
+                            <span>YEARS</span>
+                        </div>
+
+                    </div>
+
+
+                    <div className="mv-cards">
+
+                        <article className="mv-card">
+                            <span className="mv-card-number">01</span>
+
+                            <h3>Our Mission</h3>
+
+                            <p>
+                                At EZ Tutoring, our mission is to provide a safe,
+                                engaging, and academically focused environment where
+                                students receive quality homework assistance,
+                                group-based tutoring, and enrichment opportunities
+                                that build confidence, strengthen academic skills,
+                                and inspire a lifelong love of learning.
+                            </p>
+
+                            <p>
+                                We are committed to partnering with families and
+                                helping every child learn, grow, and succeed.
+                            </p>
+                        </article>
+
+
+                        <article className="mv-card">
+                            <span className="mv-card-number">02</span>
+
+                            <h3>Our Vision</h3>
+
+                            <p>
+                                Our vision is to be the premier after-school and
+                                tutoring center in our community by preparing
+                                students for lifelong academic success while
+                                fostering responsibility, respect, leadership,
+                                and character.
+                            </p>
+                        </article>
+
+                    </div>
+
+
+                    <div className="mv-commitment">
+
+                        <div className="mv-commitment-heading">
+                            <span>★</span>
+
+                            <h3>
+                                PROUDLY SERVING FAMILIES SINCE 2009
+                            </h3>
+
+                            <span>★</span>
+                        </div>
+
+                        <p>
+                            As one of the pioneers in providing after-school care
+                            and tutoring services in our area, EZ Tutoring has
+                            proudly supported families for more than 17 years.
+                            Our long-standing commitment to academic excellence,
+                            student safety, and exceptional service has allowed
+                            us to help generations of students develop the skills
+                            and confidence they need to succeed.
+                        </p>
+
+                        <p>
+                            We remain dedicated to making every minute count by
+                            providing a structured, caring, and enriching learning
+                            environment.
+                        </p>
+
+                    </div>
+
+
+                    <div className="mv-tagline">
+                        <span>LEARN</span>
+                        <b>•</b>
+                        <span>GROW</span>
+                        <b>•</b>
+                        <span>SUCCEED</span>
+                    </div>
+
+                </div>
+            </section>
+
             <section className="services-wrapper">
                 {sortedServices.length > 4 && (
                     <button

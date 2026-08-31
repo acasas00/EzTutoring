@@ -75,10 +75,10 @@ body {
 }
 
 .home-hero {
-  background: radial-gradient(circle at center, #183b70 0%, #0B1F4D 65%);
-  color: white;
-  text-align: center;
-  padding: 110px 20px 190px;
+    background: radial-gradient(circle at center, #183b70 0%, #0B1F4D 65%);
+    color: white;
+    text-align: center;
+    padding: 80px 20px 65px;
 }
 
 .home-hero h1 {
@@ -420,7 +420,7 @@ body {
 .services-wrapper {
     position: relative;
     max-width: 1320px;
-    margin: -95px auto 80px;
+    margin: -65px auto 80px;
     padding: 0;
 }
 
@@ -649,5 +649,363 @@ body {
 
     .services-arrow:last-of-type{
         right:-10px;
+    }
+}
+
+/* =========================
+   MISSION / VISION SECTION
+   ========================= */
+
+.mission-vision-section {
+    position: relative;
+    background:
+        linear-gradient(
+            180deg,
+            #f8f6ef 0%,
+            #eef3f7 100%
+        );
+
+    padding: 85px 20px 145px;
+    overflow: hidden;
+
+    border-top: 5px solid #F4C542;
+}
+
+
+.mission-vision-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+}
+
+
+/* HEADER */
+
+.mv-heading {
+    text-align: center;
+    margin-bottom: 42px;
+}
+
+.mv-eyebrow {
+    color: #3d7b56;
+    font-weight: 800;
+    letter-spacing: 4px;
+    font-size: .9rem;
+    margin: 0 0 12px;
+}
+
+.mv-heading h2 {
+    color: #0B1F4D;
+    font-size: 2.65rem;
+    line-height: 1.25;
+    margin: 0;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.mv-heading h2 span {
+    color: #F4C542;
+    margin: 0 12px;
+}
+
+
+/* 17 YEARS BANNER */
+
+.mv-legacy-banner {
+    background:
+        linear-gradient(
+            135deg,
+            #071739,
+            #0B1F4D
+        );
+
+    border-radius: 16px;
+
+    padding: 28px 34px;
+
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 30px;
+
+    border-left: 6px solid #F4C542;
+
+    box-shadow:
+        0 12px 30px rgba(0,0,0,.18);
+
+    margin-bottom: 28px;
+}
+
+
+.mv-legacy-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+
+.mv-legacy-copy span {
+    color: #38bdf8;
+    font-size: .85rem;
+    letter-spacing: 2px;
+    font-weight: 800;
+}
+
+
+.mv-legacy-copy strong {
+    color: white;
+    font-size: 2rem;
+    line-height: 1.2;
+}
+
+
+/* YEAR BADGE */
+
+.mv-years-badge {
+    width: 116px;
+    height: 116px;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+
+    background: #F4C542;
+    color: #0B1F4D;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    box-shadow:
+        0 6px 18px rgba(0,0,0,.25);
+}
+
+
+.mv-years-badge strong {
+    font-size: 2.3rem;
+    line-height: 1;
+}
+
+
+.mv-years-badge span {
+    font-size: .75rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+    margin-top: 5px;
+}
+
+
+/* MISSION + VISION */
+
+.mv-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+
+    margin-bottom: 28px;
+}
+
+
+.mv-card {
+    position: relative;
+
+    background: white;
+
+    padding: 38px 36px 34px;
+
+    border-radius: 14px;
+
+    border-top: 5px solid #38bdf8;
+
+    box-shadow:
+        0 8px 24px rgba(11,31,77,.10);
+}
+
+
+.mv-card-number {
+    position: absolute;
+    right: 26px;
+    top: 20px;
+
+    color: rgba(11,31,77,.08);
+
+    font-size: 3.8rem;
+    font-weight: 900;
+    line-height: 1;
+}
+
+
+.mv-card h3 {
+    color: #0B1F4D;
+
+    font-size: 1.75rem;
+    margin: 0 0 22px;
+
+    text-transform: uppercase;
+}
+
+
+.mv-card p {
+    color: #4d5965;
+    line-height: 1.8;
+    font-size: 1rem;
+    margin: 0 0 15px;
+}
+
+
+.mv-card p:last-child {
+    margin-bottom: 0;
+}
+
+
+/* COMMITMENT */
+
+.mv-commitment {
+    background: white;
+
+    border-radius: 14px;
+
+    padding: 34px 42px;
+
+    border-left: 5px solid #3d7b56;
+
+    box-shadow:
+        0 8px 24px rgba(11,31,77,.10);
+}
+
+
+.mv-commitment-heading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+
+    margin-bottom: 20px;
+}
+
+
+.mv-commitment-heading h3 {
+    color: #0B1F4D;
+
+    text-align: center;
+    margin: 0;
+
+    font-size: 1.35rem;
+    letter-spacing: 1px;
+}
+
+
+.mv-commitment-heading span {
+    color: #F4C542;
+    font-size: 1.2rem;
+}
+
+
+.mv-commitment p {
+    max-width: 950px;
+    margin: 0 auto 13px;
+
+    color: #4d5965;
+    line-height: 1.8;
+
+    text-align: center;
+}
+
+
+.mv-commitment p:last-child {
+    margin-bottom: 0;
+}
+
+
+/* FINAL TAGLINE */
+
+.mv-tagline {
+    margin-top: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+
+    color: #0B1F4D;
+
+    font-weight: 900;
+    letter-spacing: 4px;
+
+    font-size: 1.25rem;
+}
+
+
+.mv-tagline b {
+    color: #F4C542;
+    font-size: 1.5rem;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 768px) {
+
+    .mission-vision-section {
+    padding: 55px 20px 120px;
+    }
+
+    .mv-heading {
+        margin-bottom: 30px;
+    }
+
+    .mv-heading h2 {
+        font-size: 1.8rem;
+    }
+
+    .mv-heading h2 span {
+        margin: 0 5px;
+    }
+
+
+    .mv-legacy-banner {
+        grid-template-columns: 1fr;
+
+        padding: 28px 24px;
+
+        text-align: center;
+    }
+
+    .mv-years-badge {
+        margin: 5px auto 0;
+        width: 100px;
+        height: 100px;
+    }
+
+    .mv-legacy-copy strong {
+        font-size: 1.55rem;
+    }
+
+
+    .mv-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .mv-card {
+        padding: 32px 25px;
+    }
+
+
+    .mv-commitment {
+        padding: 30px 23px;
+    }
+
+    .mv-commitment-heading {
+        align-items: flex-start;
+    }
+
+
+    .mv-tagline {
+        gap: 8px;
+
+        font-size: .95rem;
+        letter-spacing: 2px;
+
+        flex-wrap: wrap;
     }
 }
